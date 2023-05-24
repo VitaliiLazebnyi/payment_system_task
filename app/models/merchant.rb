@@ -8,6 +8,6 @@ class Merchant < ApplicationRecord
                     length: { minimum: 3 }
   validates :active, inclusion: { in: [true, false] }
   validates :total_transaction_sum,
-            numericality: { only_integer: true, greater_than_or_equal_to: 0 },
-            presence: true
+            presence: true,
+            numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 end
