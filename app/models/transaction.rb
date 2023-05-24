@@ -10,4 +10,7 @@ class Transaction < ApplicationRecord
             numericality: { only_integer: true, greater_than_or_equal_to: 1 }
   validates :customer_email, presence: true, length: { minimum: 3 }
   validates :customer_phone, presence: true, length: { minimum: 3 }
+  validates :type, presence: true
+
+  belongs_to :user
 end

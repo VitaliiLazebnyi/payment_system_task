@@ -3,6 +3,8 @@
 RSpec.describe Transaction do
   subject { build(:transaction) }
 
+  it { should belong_to(:user) }
+
   it {
     is_expected.to validate_numericality_of(:amount)
       .only_integer
@@ -19,4 +21,6 @@ RSpec.describe Transaction do
 
   it { is_expected.to validate_presence_of(:customer_phone) }
   it { is_expected.to validate_length_of(:customer_phone).is_at_least(3) }
+
+  it { is_expected.to validate_presence_of(:type) }
 end

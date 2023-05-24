@@ -10,4 +10,6 @@ class User < ApplicationRecord
   validates :total_transaction_sum,
             presence: true,
             numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+
+  has_many :transactions, dependent: :destroy
 end

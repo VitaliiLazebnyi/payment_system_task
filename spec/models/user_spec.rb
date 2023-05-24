@@ -3,6 +3,8 @@
 RSpec.describe User do
   subject { build(:user) }
 
+  it { should have_many(:transactions) }
+
   it { is_expected.to validate_presence_of(:name) }
   it { is_expected.to validate_length_of(:name).is_at_least(3) }
 
