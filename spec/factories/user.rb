@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :merchant do
+  factory :user do
     name { "Name #{Time.now.to_f}" }
     description { "Description #{Time.now.to_f}." }
     email { "email_#{Time.now.to_f}@gmail.com" }

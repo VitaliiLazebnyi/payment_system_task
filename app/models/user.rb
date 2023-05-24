@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Merchant < ApplicationRecord
+class User < ApplicationRecord
   validates :name, presence: true, length: { minimum: 3 }
   validates :description, presence: true, length: { minimum: 3 }
   validates :email, presence: true,

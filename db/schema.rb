@@ -10,22 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_24_204859) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_24_215726) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
-
-  create_table "merchants", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.text "name", null: false
-    t.text "description", null: false
-    t.citext "email", null: false
-    t.boolean "active", default: true, null: false
-    t.integer "total_transaction_sum", default: 0, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["email"], name: "index_merchants_on_email", unique: true
-  end
 
   create_table "transactions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.integer "amount", default: 0, null: false
@@ -34,6 +23,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_24_204859) do
     t.citext "customer_phone", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.text "name", null: false
+    t.text "description", null: false
+    t.citext "email", null: false
+    t.boolean "active", default: true, null: false
+    t.integer "total_transaction_sum", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "type"
+    t.index ["email"], name: "index_users_on_email", unique: true
   end
 
 end
