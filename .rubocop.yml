@@ -11,3 +11,6 @@ AllCops:
 
 Style/Documentation:
   Enabled: false
+
+RSpec/ImplicitSubject:
+  EnforcedStyle: require_implicit
