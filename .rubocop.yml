@@ -1,0 +1,13 @@
+require:
+  - rubocop-performance
+  - rubocop-rspec
+  - rubocop-rake
+  - rubocop-rails
+  - rubocop-factory_bot
+  - rubocop-md
+
+AllCops:
+  NewCops: enable
+
+Style/Documentation:
+  Enabled: false
