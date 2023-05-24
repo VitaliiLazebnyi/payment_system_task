@@ -6,7 +6,7 @@ RSpec.describe Transaction do
   it {
     is_expected.to validate_numericality_of(:amount)
       .only_integer
-      .is_greater_than_or_equal_to(0)
+      .is_greater_than_or_equal_to(1)
   }
 
   it {
