@@ -21,3 +21,10 @@ RSpec/ImplicitSubject:
 
 RSpec/ImplicitExpect:
   EnforcedStyle: should
+
+RSpec/ExampleLength:
+  Max: 10
+  CountAsOne:
+    - array
+    - hash
+    - heredoc

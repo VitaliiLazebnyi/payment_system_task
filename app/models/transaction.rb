@@ -11,4 +11,17 @@ class Transaction < ApplicationRecord
   validates :type, presence: true
 
   belongs_to :user
+
+  has_one :reference,
+          class_name: :Transaction,
+          foreign_key: :reference_id,
+          dependent: :nullify,
+          inverse_of: :follow
+
+  belongs_to :follow,
+             class_name: :Transaction,
+             foreign_key: :reference_id,
+             dependent: :destroy,
+             inverse_of: :reference,
+             optional: true
 end

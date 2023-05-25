@@ -6,6 +6,23 @@ RSpec.describe Transaction do
   it { should belong_to(:user) }
 
   it {
+    should have_one(:reference)
+      .class_name(described_class)
+      .with_foreign_key('reference_id')
+      .inverse_of(:follow)
+      .dependent(:nullify)
+  }
+
+  it {
+    should belong_to(:follow)
+      .class_name(described_class)
+      .with_foreign_key('reference_id')
+      .inverse_of(:reference)
+      .dependent(:destroy)
+      .optional
+  }
+
+  it {
     should validate_numericality_of(:amount)
       .only_integer
       .is_greater_than_or_equal_to(1)

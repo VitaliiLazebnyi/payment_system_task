@@ -28,14 +28,14 @@ RSpec.describe User do
 
   describe '#destroy' do
     it "can be destroyed if doesn't contain transactions" do
-      user = create(:user)
-      expect { user.destroy }.to change(described_class, :count).by(-1)
+      merchant = create(:merchant)
+      expect { merchant.destroy }.to change(described_class, :count).by(-1)
     end
 
     it "can't be destroyed if contains transactions" do
-      user = create(:user)
-      user.transactions.create attributes_for(:refund)
-      expect { user.destroy }.not_to(change(described_class, :count))
+      merchant = create(:merchant)
+      merchant.transactions.create attributes_for(:refund)
+      expect { merchant.destroy }.not_to(change(described_class, :count))
     end
   end
 end
