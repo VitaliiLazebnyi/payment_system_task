@@ -17,6 +17,7 @@ class User < ApplicationRecord
   has_many :transactions, dependent: :destroy
 
   private
+
   def validate_no_transactions
     return if transactions.empty?
 

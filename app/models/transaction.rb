@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Transaction < ApplicationRecord
-  # uuid, amount, status (approved, reversed, refunded,
-  #  error), customer_email, customer_phone
   enum :status, %i[approved reversed refunded error]
 
   validates :amount,
