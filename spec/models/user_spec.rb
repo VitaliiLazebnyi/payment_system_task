@@ -23,4 +23,17 @@ RSpec.describe User do
       .only_integer
       .is_greater_than_or_equal_to(0)
   }
+
+  context '#destroy' do
+    it "can be destroyed if doesn't contain transactions" do
+      user = create :user
+      expect { user.destroy }.to change { User.count }.by(-1)
+    end
+
+    it "can't be destroyed if contains transactions" do
+      user = create :user
+      user.transactions.create attributes_for(:refund)
+      expect { user.destroy }.to_not change { User.count }
+    end
+  end
 end
