@@ -8,6 +8,7 @@ div.merchants
     div.email email
     div.status status
     div.total_transaction_sum total_transaction_sum
+    div.delete delete
 
   - @merchants.each do |merchant|
     div.merchant
@@ -17,3 +18,4 @@ div.merchants
       div.status=merchant.active ? 'Active' : 'Inactive'
       div.total_transaction_sum=merchant.total_transaction_sum
       div.user_id=merchant.type
+      div.delete=button_to 'Delete answer', merchant, remote: true, method: :delete
