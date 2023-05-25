@@ -17,6 +17,18 @@ RSpec.describe MerchantsController do
     end
   end
 
+  describe 'GET #edit' do
+    it 'assigns merchant variable' do
+      get :edit, params: { id: Merchant.last.id }
+      expect(assigns(:merchant)).to eq Merchant.last
+    end
+
+    it 'returns 200 /ok/ response code' do
+      get :edit, params: { id: Merchant.last.id }
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
   describe 'DELETE #destroy' do
     it 'destroys merchant' do
       expect { delete :destroy, params: { id: Merchant.last.id } }
