@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-Rails.application.load_tasks
-
 describe 'rake import:users' do
   it 'creates users during import' do
     new_env = ENV.to_hash.merge('filename' => 'spec/fixtures/users.xml')

@@ -12,6 +12,7 @@ namespace :import do
 
     csv_text = File.read(filename)
     csv = CSV.parse(csv_text, headers: true)
+
     csv.each do |row|
       puts "Puts importing user with email '#{row['email']}'..."
       User.create!(row.to_hash)
