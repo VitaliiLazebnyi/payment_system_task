@@ -29,6 +29,20 @@ RSpec.describe MerchantsController do
     end
   end
 
+  describe 'PUT #update' do
+    let(:params) { { name: 'new_name' } }
+
+    it 'updates merchant' do
+      put :update, params: { id: Merchant.last.id, merchant: params }
+      expect(Merchant.last.name).to eq params[:name]
+    end
+
+    it 'redirects back to merchant edit page' do
+      put :update, params: { id: Merchant.last.id, merchant: params }
+      expect(response).to redirect_to(edit_merchant_url(Merchant.last))
+    end
+  end
+
   describe 'DELETE #destroy' do
     it 'destroys merchant' do
       expect { delete :destroy, params: { id: Merchant.last.id } }

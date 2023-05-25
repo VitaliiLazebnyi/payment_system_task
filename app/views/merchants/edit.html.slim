@@ -1,6 +1,6 @@
 = link_to 'Merchants', merchants_path, class: 'merchant_link'
 
-= form_with(model: Merchant, url: edit_merchant_path(@merchant), method: :patch) do |f|
+= form_with(model: Merchant, url: merchant_path(@merchant), method: :patch) do |f|
   div.name
     = f.label :name
     = f.text_field :name, value: @merchant.name
