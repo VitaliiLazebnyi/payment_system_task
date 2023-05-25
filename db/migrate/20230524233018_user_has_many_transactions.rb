@@ -2,6 +2,6 @@
 
 class UserHasManyTransactions < ActiveRecord::Migration[7.0]
   def change
-    add_reference :transactions, :user
+    add_reference :transactions, :user, type: :uuid
   end
 end

@@ -24,7 +24,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_25_003829) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "type"
-    t.bigint "user_id"
+    t.uuid "user_id"
     t.uuid "reference_id"
     t.index ["reference_id"], name: "index_transactions_on_reference_id"
     t.index ["user_id"], name: "index_transactions_on_user_id"
