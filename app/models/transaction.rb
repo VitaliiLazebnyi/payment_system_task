@@ -2,6 +2,16 @@
 
 class Transaction < ApplicationRecord
   validate :reference_only_approved_and_refunded
+  validate :proper_reference_chain
+
+  # Possible reference chains
+  # Authorize Transaction -> Charge Transaction -> Refund Transaction
+  # Authorize Transaction -> Reversal Transaction
+  ALLOWED_REFERENCES = [
+    %w[Authorize Charge],
+    %w[Charge Refund],
+    %w[Authorize Reversal]
+  ].freeze
 
   enum :status, %i[approved reversed refunded error]
 
@@ -35,5 +45,15 @@ class Transaction < ApplicationRecord
     return if !reference || %w[approved refunded].include?(reference.status)
 
     errors.add(:reference, 'should be approved or refunded')
+  end
+
+  def proper_reference_chain
+    return unless reference
+
+    return if ALLOWED_REFERENCES.any? do |chain|
+      type == chain.last && reference.type == chain.first
+    end
+
+    errors.add(:reference, "can't have '#{reference.class}' as a reference")
   end
 end

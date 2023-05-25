@@ -74,4 +74,40 @@ RSpec.describe Transaction do
       expect(follow.errors).to be_present
     end
   end
+
+  describe 'validates proper reference chain' do
+    let(:merchant) { create(:merchant) }
+
+    it 'Authorize can be references by Charge' do
+      reference = create(:authorize, user: merchant, status: :approved)
+      follow    = create(:charge, user: merchant, status: :approved)
+      follow.reference = reference
+      expect(follow.save).to be true
+      expect(follow.errors).to be_empty
+    end
+
+    it 'Charge can be references by Refund' do
+      reference = create(:charge, user: merchant, status: :approved)
+      follow    = create(:refund, user: merchant, status: :approved)
+      follow.reference = reference
+      expect(follow.save).to be true
+      expect(follow.errors).to be_empty
+    end
+
+    it 'Authorize can be references by Reversal' do
+      reference = create(:authorize, user: merchant, status: :approved)
+      follow    = create(:reversal, user: merchant, status: :approved)
+      follow.reference = reference
+      expect(follow.save).to be true
+      expect(follow.errors).to be_empty
+    end
+
+    it "Reversal can't be references by another Reversal" do
+      reference = create(:reversal, user: merchant, status: :approved)
+      follow    = create(:reversal, user: merchant, status: :approved)
+      follow.reference = reference
+      expect(follow.save).to be false
+      expect(follow.errors).to be_present
+    end
+  end
 end
