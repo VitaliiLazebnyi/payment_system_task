@@ -28,3 +28,6 @@ RSpec/ExampleLength:
     - array
     - hash
     - heredoc
+
+RSpec/MultipleExpectations:
+  Enabled: false

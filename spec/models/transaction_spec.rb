@@ -40,4 +40,38 @@ RSpec.describe Transaction do
   it { should validate_length_of(:customer_phone).is_at_least(3) }
 
   it { should validate_presence_of(:type) }
+
+  describe 'only approved or refunded can be referenced' do
+    let(:merchant) { create(:merchant) }
+    let(:reference) { create(:charge, user: merchant) }
+    let(:follow) { create(:refund, user: merchant) }
+
+    it 'references approved' do
+      reference.status = :approved
+      follow.reference = reference
+      expect(follow.save).to be true
+      expect(follow.errors).to be_empty
+    end
+
+    it 'references refunded' do
+      reference.status = :refunded
+      follow.reference = reference
+      expect(follow.save).to be true
+      expect(follow.errors).to be_empty
+    end
+
+    it "doesn't reference reversed" do
+      reference.status = :reversed
+      follow.reference = reference
+      expect(follow.save).to be false
+      expect(follow.errors).to be_present
+    end
+
+    it "doesn't reference error" do
+      reference.status = :error
+      follow.reference = reference
+      expect(follow.save).to be false
+      expect(follow.errors).to be_present
+    end
+  end
 end

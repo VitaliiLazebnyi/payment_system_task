@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Transaction < ApplicationRecord
+  validate :reference_only_approved_and_refunded
+
   enum :status, %i[approved reversed refunded error]
 
   validates :amount,
@@ -16,12 +18,22 @@ class Transaction < ApplicationRecord
           class_name: :Transaction,
           foreign_key: :reference_id,
           dependent: :nullify,
-          inverse_of: :follow
+          inverse_of: :follow,
+          validate: true
 
   belongs_to :follow,
              class_name: :Transaction,
              foreign_key: :reference_id,
              dependent: :destroy,
              inverse_of: :reference,
-             optional: true
+             optional: true,
+             validate: true
+
+  private
+
+  def reference_only_approved_and_refunded
+    return if !reference || %w[approved refunded].include?(reference.status)
+
+    errors.add(:reference, 'should be approved or refunded')
+  end
 end
