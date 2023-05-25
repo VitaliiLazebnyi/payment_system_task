@@ -1,0 +1,21 @@
+div.transactions
+  div.transaction_titles
+    div.id id
+    div.type type
+    div.amount amount
+    div.status status
+    div.customer_email customer_email
+    div.customer_phone customer_phone
+    div.user_id user_id
+    div.reference_id reference_id
+
+  - @transactions.each do |transaction|
+    div.transaction
+      div.id=transaction.id
+      div.type=transaction.type
+      div.amount=transaction.amount
+      div.status=transaction.status
+      div.customer_email=transaction.customer_email
+      div.customer_phone=transaction.customer_phone
+      div.user_id=transaction.user_id
+      div.reference_id=transaction.reference_id
