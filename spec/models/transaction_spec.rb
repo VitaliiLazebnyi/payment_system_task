@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Transaction do
-  subject { build(:transaction) }
+  subject { build(:transaction, user: build(:merchant)) }
 
   it { should belong_to(:user) }
 
@@ -109,5 +109,12 @@ RSpec.describe Transaction do
       expect(follow.save).to be false
       expect(follow.errors).to be_present
     end
+  end
+
+  it "can't be created for inactive user" do
+    transaction = attributes_for(:transaction, user: build(:merchant, active: false))
+    transaction = described_class.new(transaction)
+    expect(transaction.save).to be false
+    expect(transaction.errors).to be_present
   end
 end

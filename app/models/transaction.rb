@@ -3,6 +3,7 @@
 class Transaction < ApplicationRecord
   validate :reference_only_approved_and_refunded
   validate :proper_reference_chain
+  validate :active_user, on: :create
 
   # Possible reference chains
   # Authorize Transaction -> Charge Transaction -> Refund Transaction
@@ -63,5 +64,11 @@ class Transaction < ApplicationRecord
     return unless type == 'Reversal' && amount.present
 
     errors.add(:amount, :present)
+  end
+
+  def active_user
+    return if user&.active
+
+    errors.add(:user, 'should be active')
   end
 end
