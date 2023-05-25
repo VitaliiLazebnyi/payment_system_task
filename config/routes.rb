@@ -6,7 +6,10 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root 'transactions#index'
 
+  resources :merchants, only: :index
+  resources :transactions, only: :index
+
   namespace :api, defaults: { format: :json } do
-    resources :transactions, only: %i[create]
+    resources :transactions, only: :create
   end
 end

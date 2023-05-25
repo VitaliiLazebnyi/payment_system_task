@@ -1,0 +1,19 @@
+= link_to 'Transactions', transactions_path, class: 'transaction_link'
+
+div.merchants
+  div.merchant_titles
+    div.id id
+    div.name name
+    div.description description
+    div.email email
+    div.status status
+    div.total_transaction_sum total_transaction_sum
+
+  - @merchants.each do |merchant|
+    div.merchant
+      div.id=merchant.name
+      div.type=merchant.description
+      div.amount=merchant.email
+      div.status=merchant.active ? 'Active' : 'Inactive'
+      div.total_transaction_sum=merchant.total_transaction_sum
+      div.user_id=merchant.type

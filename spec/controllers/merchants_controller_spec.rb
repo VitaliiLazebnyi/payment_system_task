@@ -1,15 +1,14 @@
 # frozen_string_literal: true
 
-RSpec.describe TransactionsController do
+RSpec.describe MerchantsController do
   describe 'GET #index' do
     before do
-      merchant = create(:merchant)
-      create(:authorize, user: merchant)
+      create(:merchant)
     end
 
     it 'assigns transactions variable' do
       get :index
-      expect(assigns(:transactions)).to eq [Transaction.last]
+      expect(assigns(:merchants)).to eq [Merchant.last]
     end
 
     it 'returns 200 /ok/ response code' do
