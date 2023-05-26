@@ -13,3 +13,50 @@
  *= require_tree .
  *= require_self
  */
+
+.table {
+    display: table;
+    width: 100%;
+}
+
+.header {
+    flex-grow: 1;
+    text-align: center;
+    background-color: #f1f1f1;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+.row {
+    display: table-row;
+}
+
+.cell {
+    display: table-cell;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #f1f1f1;
+}
+
+.navigation_link {
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    margin: 30px;
+}
+
+.centered-button {
+    display: block;
+    margin: 0 auto; /* Center horizontally */
+    font-size: 18px; /* Increase font size */
+    padding: 10px 20px; /* Add padding for button size */
+    border-radius: 4px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.centered-button:hover {
+    background-color: #0056b3;
+}
