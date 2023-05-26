@@ -14,7 +14,7 @@
 5. Create, migrate, seed databases:
    ````
    rails db:create db:migrate db:seed
-   ```` 
+   ````
 ### Run application
 ````
 rails s
@@ -28,7 +28,7 @@ whenever --update-crontab --set environment='development'
 
 For production:
 ````
-whenever --update-crontab
+whenever(--update - crontab)
 ````
 
 Jobs log can be found at ``log/cron.log``.
@@ -71,12 +71,12 @@ rubocop
       }
    }
    ```
-   
+
    You are expected to fill following request headers:
    ```
    Accept:"application/json"
    Content-Type:"application/json"
    ```
-   
+
    To pass **Basic Auth** use existing Merchant **id** as username and his **email** like a password.
-   **user_id** in request and Merchant **id** from Basic Auth should be the same. 
+   **user_id** in request and Merchant **id** from Basic Auth should be the same.

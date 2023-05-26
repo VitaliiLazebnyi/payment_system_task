@@ -8,6 +8,7 @@ RSpec.configure do |config|
     $stderr = File.open(File::NULL, 'w')
     $stdout = File.open(File::NULL, 'w')
   end
+
   config.after(:all) do
     $stderr = original_stderr
     $stdout = original_stdout

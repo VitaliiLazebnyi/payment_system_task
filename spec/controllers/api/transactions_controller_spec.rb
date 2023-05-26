@@ -3,19 +3,26 @@
 RSpec.describe Api::TransactionsController do
   describe 'POST #create' do
     let(:merchant) { create(:merchant) }
-    let(:merchant_2) { create(:merchant) }
+    let(:merchant2) { create(:merchant) }
     let(:transaction_params) { attributes_for(:authorize, user_id: merchant.id) }
 
     before do
       request.env['HTTP_AUTHORIZATION'] =
         ActionController::HttpAuthentication::Basic
-          .encode_credentials(merchant.id, merchant.email)
+        .encode_credentials(merchant.id, merchant.email)
     end
 
     describe 'valid parameters' do
       it 'creates a transaction' do
         expect { post :create, params: { transaction: transaction_params }, format: :json }
           .to change(Transaction, :count).by(1)
+      end
+
+      it "updates Merchant's total_transaction_sum" do
+        total_transaction_sum = merchant.total_transaction_sum
+        post :create, params: { transaction: transaction_params }, format: :json
+        merchant.reload
+        expect(merchant.total_transaction_sum).to be(total_transaction_sum + transaction_params[:amount])
       end
 
       it 'returns 200 /ok/ response code' do
@@ -25,9 +32,11 @@ RSpec.describe Api::TransactionsController do
     end
 
     describe 'invalid parameters' do
-      let(:transaction_params) { attributes_for(:authorize,
-                                                user_id: merchant.id,
-                                                customer_email: nil) }
+      let(:transaction_params) do
+        attributes_for(:authorize,
+                       user_id: merchant.id,
+                       customer_email: nil)
+      end
 
       it "doesn't create a transaction" do
         expect { post :create, params: { transaction: transaction_params }, format: :json }
@@ -53,11 +62,11 @@ RSpec.describe Api::TransactionsController do
     end
 
     describe 'merchant tries to create a transaction for another merchant' do
-      let(:transaction_params) { attributes_for(:authorize, user_id: merchant_2.id) }
+      let(:transaction_params) { attributes_for(:authorize, user_id: merchant2.id) }
 
       it "doesn't create a transaction" do
         expect { post :create, params: { transaction: transaction_params }, format: :json }
-          .to change(Transaction, :count).by(0)
+          .not_to change(Transaction, :count)
       end
 
       it 'returns 401 /unauthorized/ response code' do
@@ -73,7 +82,7 @@ RSpec.describe Api::TransactionsController do
 
       it "doesn't create a transaction" do
         expect { post :create, params: { transaction: transaction_params }, format: :json }
-          .to change(Transaction, :count).by(0)
+          .not_to change(Transaction, :count)
       end
 
       it 'returns 401 /unauthorized/ response code' do
