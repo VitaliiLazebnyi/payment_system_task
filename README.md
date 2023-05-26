@@ -51,3 +51,32 @@ rspec
 ````
 rubocop
 ````
+
+### API
+
+1. Create Transactions
+
+   POST   **/api/transactions**
+
+   **Request example:**
+   ```json
+   {
+      "transaction":{
+         "amount":100,
+         "status":"approved",
+         "customer_email":"my@secret.email",
+         "customer_phone":"myPhone",
+         "type":"Authorize",
+         "user_id":"c264b98c-4735-4287-8a85-9748aa7d3caf"
+      }
+   }
+   ```
+   
+   You are expected to fill following request headers:
+   ```
+   Accept:"application/json"
+   Content-Type:"application/json"
+   ```
+   
+   To pass **Basic Auth** use existing Merchant **id** as username and his **email** like a password.
+   **user_id** in request and Merchant **id** from Basic Auth should be the same. 
