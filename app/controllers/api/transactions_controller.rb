@@ -7,7 +7,7 @@ module Api
     before_action :basic_auth
 
     def create
-      success, transaction = create_transaction
+      success, transaction = TransactionCreator.call(create_params)
       if success
         render json: transaction
       else
@@ -19,18 +19,6 @@ module Api
 
     def user_id_param
       params.require(:transaction)[:user_id]
-    end
-
-    def create_transaction
-      success = false
-      transaction = Transaction.new(create_params)
-      merchant = Merchant.find(user_id_param)
-      ActiveRecord::Base.transaction do
-        success = transaction.save
-        merchant.total_transaction_sum += transaction.amount
-        merchant.save
-      end
-      [success, transaction]
     end
 
     def create_params
@@ -54,7 +42,7 @@ module Api
     def basic_auth
       authenticate_or_request_with_http_basic do |id, email|
         validate_user_id(id) &&
-          User.where(id:, email:, type: 'Merchant').present?
+          User.exists?(id:, email:, type: 'Merchant')
       end
     end
   end

@@ -36,3 +36,7 @@ RSpec/MultipleExpectations:
 RSpec/DescribeClass:
   Exclude:
     - spec/tasks/*_spec.rb
+
+Lint/MissingSuper:
+  Exclude:
+    - app/services/*.rb
