@@ -2,7 +2,7 @@
 
 class MerchantsController < ApplicationController
   def index
-    @merchants = Merchant.all
+    @merchants = Merchant.all.order(:id)
   end
 
   def edit

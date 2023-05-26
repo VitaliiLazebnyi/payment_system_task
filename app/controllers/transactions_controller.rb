@@ -2,6 +2,6 @@
 
 class TransactionsController < ApplicationController
   def index
-    @transactions = Transaction.all
+    @transactions = Transaction.all.order(:id)
   end
 end
