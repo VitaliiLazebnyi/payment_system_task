@@ -7,9 +7,7 @@ RSpec.describe Api::TransactionsController do
     let(:transaction_params) { attributes_for(:authorize, user_id: merchant.id) }
 
     before do
-      request.env['HTTP_AUTHORIZATION'] =
-        ActionController::HttpAuthentication::Basic
-        .encode_credentials(merchant.id, merchant.email)
+      allow(controller).to receive(:current_user).and_return(merchant)
     end
 
     describe 'valid parameters' do
@@ -77,7 +75,7 @@ RSpec.describe Api::TransactionsController do
 
     describe "doesn't pass basic auth" do
       before do
-        request.env['HTTP_AUTHORIZATION'] = nil
+        allow(controller).to receive(:current_user).and_return(nil)
       end
 
       it "doesn't create a transaction" do

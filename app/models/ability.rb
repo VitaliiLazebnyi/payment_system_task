@@ -11,12 +11,12 @@ class Ability
       can %i[new create], :session
     end
 
-    if user.is_a? Merchant
+    if user&.type == 'Merchant'
       can :index, Transaction
-      can :create, Transaction, user:
+      can :create, Transaction, user_id: user.id
     end
 
-    return unless user.is_a? Admin
+    return unless user&.type == 'Admin'
 
     can :manage, :all
   end
