@@ -19,7 +19,7 @@ class User < ApplicationRecord
 
   has_many :transactions, dependent: :destroy
 
-  delegate :can?, :cannot?, to: :ability
+  delegate :can?, :cannot?, :authorize!, to: :ability
 
   private
 

@@ -5,6 +5,7 @@ RSpec.describe TransactionsController do
     before do
       merchant = create(:merchant)
       create(:authorize, user: merchant)
+      allow(controller).to receive(:current_user).and_return(merchant)
     end
 
     it 'assigns transactions variable' do

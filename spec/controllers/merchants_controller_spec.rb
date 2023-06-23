@@ -3,6 +3,8 @@
 RSpec.describe MerchantsController do
   before do
     create(:merchant)
+    admin = create(:admin)
+    allow(controller).to receive(:current_user).and_return(admin)
   end
 
   describe 'GET #index' do

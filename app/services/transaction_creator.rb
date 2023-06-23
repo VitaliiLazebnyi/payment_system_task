@@ -12,6 +12,7 @@ class TransactionCreator < ApplicationService
     success = false
     transaction = Transaction.new(create_params)
     merchant = Merchant.find(create_params[:user_id])
+    merchant.authorize! :create, transaction
     ActiveRecord::Base.transaction do
       success = transaction.save
       merchant.total_transaction_sum += transaction.amount

@@ -22,7 +22,7 @@ class MerchantsController < ApplicationController
 
   private
 
-  def load_merchant
+  def load_merchant_and_authorize
     @merchant = Merchant.find(params[:id])
     authorize! action_name, @merchant
   end

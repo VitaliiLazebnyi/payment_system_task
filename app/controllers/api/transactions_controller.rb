@@ -4,6 +4,7 @@ module Api
   class TransactionsController < ApplicationController
     skip_before_action :verify_authenticity_token
     before_action :ensure_json_request
+    before_action :validate_user_id
 
     def create
       authorize! :create, Transaction
@@ -16,6 +17,12 @@ module Api
     end
 
     private
+
+    def validate_user_id
+      return true if current_user&.id == params.require(:transaction)[:user_id]
+
+      render json: { error: 'User can create transactions only for himself' }, status: :unauthorized
+    end
 
     def create_params
       params.require(:transaction)
