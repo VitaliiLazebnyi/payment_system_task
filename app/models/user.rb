@@ -19,6 +19,8 @@ class User < ApplicationRecord
 
   has_many :transactions, dependent: :destroy
 
+  delegate :can?, :cannot?, to: :ability
+
   private
 
   def validate_no_transactions
@@ -26,5 +28,9 @@ class User < ApplicationRecord
 
     errors.add :base, :undestroyable
     throw :abort
+  end
+
+  def ability
+    @ability ||= Ability.new(self)
   end
 end

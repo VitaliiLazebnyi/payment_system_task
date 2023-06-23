@@ -9,12 +9,19 @@ html
 
   body
     .navigation
-      = link_to 'Show Merchants', merchants_path, class: 'merchants_link navigation_link'
-      = link_to 'Show Transactions', transactions_path, class: 'transaction_link navigation_link'
-      = link_to 'Login', login_path, class: 'login_link navigation_link'
-      = link_to 'Logout', logout_path, class: 'logout_link navigation_link'
+      - if current_user&.can? :index, Merchant
+        = link_to 'Show Merchants', merchants_path, class: 'merchants_link navigation_link'
+      - if current_user&.can? :index, Transaction
+        = link_to 'Show Transactions', transactions_path, class: 'transaction_link navigation_link'
+      - if current_user
+        = link_to 'Logout', logout_path, class: 'logout_link navigation_link'
+      - else
+        = link_to 'Login', login_path, class: 'login_link navigation_link'
+
     .user
-      = current_user&.name || 'No user'
+      .label 'Username: '
+      .name = current_user&.name || 'No user'
+
     - if flash.present?
       .flash_messages
         - flash.each do |type, message|

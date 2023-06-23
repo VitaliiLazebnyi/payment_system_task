@@ -4,9 +4,9 @@ module Api
   class TransactionsController < ApplicationController
     skip_before_action :verify_authenticity_token
     before_action :ensure_json_request
-    before_action :basic_auth
 
     def create
+      authorize! :create, Transaction
       success, transaction = TransactionCreator.call(create_params)
       if success
         render json: transaction
@@ -16,10 +16,6 @@ module Api
     end
 
     private
-
-    def user_id_param
-      params.require(:transaction)[:user_id]
-    end
 
     def create_params
       params.require(:transaction)
@@ -31,19 +27,6 @@ module Api
       return if request.format.json?
 
       render json: { error: 'Invalid request format' }, status: :bad_request
-    end
-
-    def validate_user_id(id)
-      return true if id == user_id_param
-
-      render json: { error: 'User can create transactions only for himself' }, status: :unauthorized
-    end
-
-    def basic_auth
-      authenticate_or_request_with_http_basic do |id, email|
-        validate_user_id(id) &&
-          User.exists?(id:, email:, type: 'Merchant')
-      end
     end
   end
 end

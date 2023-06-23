@@ -1,22 +1,41 @@
+# frozen_string_literal: true
+
 class SessionsController < ApplicationController
-  def new
-  end
+  before_action :authorize
+
+  def new; end
 
   def create
-    user = User.find_by(email: params[:email])
-    if user && user.authenticate(params[:password])
-      session[:user_id] = user.id
-      flash[:notice]="Login successful"
+    if authenticate
+      session[:user_id] = @user.id
+      flash[:notice] = t('.sessions.login.success')
       redirect_to '/'
     else
-      flash[:notice]="Invalid Email or Password"
-      redirect_to '/login?email=' + params[:email]
+      flash[:notice] = t('.sessions.login.failed')
+      redirect_to "/login?email=#{params[:email]}"
     end
   end
 
   def destroy
     session[:user_id] = nil
-    flash[:notice]="Logged Out"
+    flash[:notice] = t('.sessions.logout.success')
     redirect_to '/login'
+  end
+
+  private
+
+  def authenticate
+    user = User.find_by(email: params[:email])
+
+    if user&.authenticate(params[:password])
+      @user = user
+      return true
+    end
+
+    false
+  end
+
+  def authorize
+    authorize! action_name, :session
   end
 end
