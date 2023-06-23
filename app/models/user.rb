@@ -3,7 +3,10 @@
 class User < ApplicationRecord
   before_destroy :validate_no_transactions
 
+  has_secure_password
+
   validates :name, presence: true, length: { minimum: 3 }
+  validates :password_digest, presence: true
   validates :description, presence: true, length: { minimum: 3 }
   validates :email, presence: true,
                     uniqueness: { case_sensitive: false },

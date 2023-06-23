@@ -7,6 +7,7 @@ namespace :import do
   task users: :environment do
     puts 'Importing users...'
     filename = ENV.fetch('filename', nil)
+
     raise ArgumentError, 'No filename is not defined!' unless filename
     raise ArgumentError, "The filename doesn't exist!" unless filename
 
@@ -15,7 +16,8 @@ namespace :import do
 
     csv.each do |row|
       puts "Puts importing user with email '#{row['email']}'..."
-      User.create!(row.to_hash)
+      password = SecureRandom.base36(64)
+      User.create!(row.to_hash.merge(password:))
     end
 
     puts 'Importing users is done.'
