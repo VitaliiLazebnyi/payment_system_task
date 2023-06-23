@@ -1,0 +1,16 @@
+h1 Login
+
+div.table
+  = form_tag '/login' do
+    div.email.row
+      div.cell
+        = label_tag :email
+      div.cell
+        = text_field_tag :email, params[:email]
+    div.password.row
+      div.cell
+        = label_tag :password
+      div.cell
+        = text_field_tag :password, params[:password]
+    div.row
+      = submit_tag "Log In", class: 'cell centered-button'
