@@ -37,6 +37,15 @@ RSpec/DescribeClass:
   Exclude:
     - spec/tasks/*_spec.rb
 
+RSpec/ContextWording:
+  Enabled: false
+
+RSpec/RepeatedExampleGroupBody:
+  Enabled: false
+
+RSpec/MessageSpies:
+  EnforcedStyle: receive
+
 Lint/MissingSuper:
   Exclude:
     - app/services/*.rb

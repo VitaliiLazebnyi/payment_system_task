@@ -24,7 +24,7 @@ class MerchantsController < ApplicationController
 
   def load_merchant_and_authorize
     @merchant = Merchant.find(params[:id])
-    authorize! action_name, @merchant
+    authorize! action_name.to_sym, @merchant
   end
 
   def update_params

@@ -5,6 +5,8 @@ class Ability
 
   # rubocop:disable Metrics/MethodLength
   def initialize(user)
+    # require 'pry'; binding.pry
+
     if user.is_a? User
       can :destroy, :session
     else
@@ -18,7 +20,9 @@ class Ability
 
     return unless user&.type == 'Admin'
 
-    can :manage, :all
+    can :manage, Transaction
+    can :manage, User, type: 'Merchant'
+    can :manage, Merchant
   end
   # rubocop:enable Metrics/MethodLength
 end
