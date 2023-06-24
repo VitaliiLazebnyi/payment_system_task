@@ -58,13 +58,13 @@ class Transaction < ApplicationRecord
     errors.add(:reference, "can't have '#{reference.class}' as a reference")
   end
 
-  def amount_by_type
-    errors.add(:amount, :blank) if %w[Authorize Charge Refund].include?(type) && amount.empty?
-
-    return unless type == 'Reversal' && amount.present
-
-    errors.add(:amount, :present)
-  end
+  # def amount_by_type
+  #   errors.add(:amount, :blank) if %w[Authorize Charge Refund].include?(type) && amount.empty?
+  #
+  #   return unless type == 'Reversal' && amount.present
+  #
+  #   errors.add(:amount, :present)
+  # end
 
   def active_user
     return if user&.active

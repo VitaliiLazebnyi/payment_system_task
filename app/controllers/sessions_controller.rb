@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class SessionsController < ApplicationController
+  authorize_resource class: false
   before_action :authorize
 
   def new; end
@@ -8,17 +9,17 @@ class SessionsController < ApplicationController
   def create
     if authenticate
       session[:user_id] = @user.id
-      flash[:notice] = t('.sessions.login.success')
+      flash[:notice] = t('sessions.login.success')
       redirect_to '/'
     else
-      flash[:notice] = t('.sessions.login.failed')
+      flash[:notice] = t('sessions.login.failed')
       redirect_to "/login?email=#{params[:email]}"
     end
   end
 
   def destroy
     session[:user_id] = nil
-    flash[:notice] = t('.sessions.logout.success')
+    flash[:notice] = t('sessions.logout.success')
     redirect_to '/login'
   end
 
@@ -36,6 +37,6 @@ class SessionsController < ApplicationController
   end
 
   def authorize
-    authorize! action_name, :session
+    authorize! action_name.to_sym, :session
   end
 end

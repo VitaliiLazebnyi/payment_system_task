@@ -1,6 +1,7 @@
 en:
   sessions:
     login:
+      require: "Please login first!"
       success: "Login successful"
       failed: "Invalid Email or Password"
     logout:

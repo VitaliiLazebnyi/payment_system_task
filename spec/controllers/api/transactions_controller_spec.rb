@@ -83,9 +83,9 @@ RSpec.describe Api::TransactionsController do
           .not_to change(Transaction, :count)
       end
 
-      it 'returns 401 /unauthorized/ response code' do
+      it 'redirect to login page' do
         post :create, params: { transaction: transaction_params }, format: :json
-        expect(response).to have_http_status(:unauthorized)
+        expect(response).to redirect_to(login_path)
       end
     end
   end
