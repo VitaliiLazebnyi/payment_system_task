@@ -19,7 +19,7 @@ module Api
     private
 
     def validate_user_id
-      return true if current_user&.id == params.require(:transaction)[:user_id]
+      return true if current_user.id == params.require(:transaction)[:user_id]
 
       render json: { error: 'User can create transactions only for himself' }, status: :unauthorized
     end

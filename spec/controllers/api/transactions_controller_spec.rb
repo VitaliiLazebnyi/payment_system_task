@@ -47,6 +47,26 @@ RSpec.describe Api::TransactionsController do
       end
     end
 
+    describe "user_id's in parameters and session are different" do
+      before do
+        allow(controller).to receive(:current_user).and_return(merchant)
+      end
+
+      let(:transaction_params) do
+        attributes_for(:authorize, user_id: merchant2.id)
+      end
+
+      it "doesn't create a transaction" do
+        expect { post :create, params: { transaction: transaction_params }, format: :json }
+          .not_to change(Transaction, :count)
+      end
+
+      it 'returns 400 /bad_request/ response code' do
+        post :create, params: { transaction: transaction_params }, format: :json
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
     describe 'invalid request format' do
       it 'proper response body' do
         post :create, params: { transaction: {} }, format: :xml
