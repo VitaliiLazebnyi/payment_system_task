@@ -9,7 +9,7 @@ namespace :import do
     filename = ENV.fetch('filename', nil)
 
     raise ArgumentError, 'No filename is not defined!' unless filename
-    raise ArgumentError, "The filename doesn't exist!" unless filename
+    raise ArgumentError, "The filename doesn't exist!" unless File.file?(filename)
 
     csv_text = File.read(filename)
     csv = CSV.parse(csv_text, headers: true)
