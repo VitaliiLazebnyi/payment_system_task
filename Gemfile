@@ -47,6 +47,9 @@ group :development, :test do
   gem 'debug', platforms: %i[mri mingw x64_mingw]
 
   gem 'pry'
+
+  gem 'capybara'
+  gem 'webdrivers', '~> 4.0', require: false
 end
 
 group :development do
