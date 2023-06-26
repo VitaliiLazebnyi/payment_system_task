@@ -19,7 +19,7 @@ RSpec.describe SessionsController do
 
       it 'redirect to 403' do
         get :new
-        expect(response).to redirect_to('/403')
+        expect(response).to have_http_status(:forbidden)
       end
     end
 
@@ -30,7 +30,7 @@ RSpec.describe SessionsController do
 
       it 'redirect to 403' do
         get :new
-        expect(response).to redirect_to('/403')
+        expect(response).to have_http_status(:forbidden)
       end
     end
   end
@@ -70,7 +70,7 @@ RSpec.describe SessionsController do
 
       it 'returns 403 /forbidden/ response code' do
         post :create, params: { email: admin.email, password: admin.password }
-        expect(response).to redirect_to('/403')
+        expect(response).to have_http_status(:forbidden)
       end
     end
 
@@ -81,7 +81,7 @@ RSpec.describe SessionsController do
 
       it 'returns 403 /forbidden/ response code' do
         post :create, params: { email: admin.email, password: admin.password }
-        expect(response).to redirect_to('/403')
+        expect(response).to have_http_status(:forbidden)
       end
     end
   end
