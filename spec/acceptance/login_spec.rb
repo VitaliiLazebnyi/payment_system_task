@@ -3,6 +3,13 @@
 RSpec.describe 'Login', type: :feature do
   let!(:admin) { create(:admin) }
 
+  it 'login is required to use the site' do
+    visit '/merchants/'
+    expect(page).not_to have_content 'Logout'
+    expect(page).to have_content 'Login'
+    expect(page).to have_content 'Please login first!'
+  end
+
   it 'allows to login and logout' do
     visit '/'
     expect(page).not_to have_content 'Logout'
@@ -12,6 +19,7 @@ RSpec.describe 'Login', type: :feature do
     expect(page).to have_content 'Logout'
 
     logout
+    expect(page).to have_content 'Logged Out'
     expect(page).not_to have_content 'Logout'
   end
 

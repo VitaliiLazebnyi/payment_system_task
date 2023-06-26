@@ -1,12 +1,15 @@
 en:
   sessions:
-    login:
+    create:
       require: "Please login first!"
       success: "Login successful"
       failed: "Invalid Email or Password"
-    logout:
+    destroy:
       success: "Logged Out"
-  models:
+  merchants:
     update:
-      success: 'Successfully updated'
-      failed: 'Failed to update'
+      success: 'Successfully updated the merchant'
+      failed: 'Failed to update the merchant'
+    destroy:
+      success: 'Successfully removed the merchant'
+      failed: 'Failed to remove the merchant'

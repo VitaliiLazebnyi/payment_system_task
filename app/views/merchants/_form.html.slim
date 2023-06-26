@@ -1,4 +1,5 @@
 = render 'layouts/errors', resource: @merchant
+
 div.table.merchant
   = form_with(model: Merchant, url: merchant_path(@merchant), method: :patch) do |f|
     div.name.row

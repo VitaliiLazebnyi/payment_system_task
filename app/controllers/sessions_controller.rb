@@ -7,19 +7,13 @@ class SessionsController < ApplicationController
   def new; end
 
   def create
-    if authenticate
-      session[:user_id] = @user.id
-      flash[:success] = t('sessions.login.success')
-      redirect_to '/'
-    else
-      flash[:error] = t('sessions.login.failed')
-      redirect_to "/login?email=#{params[:email]}"
-    end
+    generate_flash_with(authenticate)
+    redirect_to @user ? '/' : "/login?email=#{params[:email]}"
   end
 
   def destroy
     session[:user_id] = nil
-    flash[:success] = t('sessions.logout.success')
+    flash[:success] = t('sessions.destroy.success')
     redirect_to '/login'
   end
 
@@ -30,6 +24,7 @@ class SessionsController < ApplicationController
 
     if user&.authenticate(params[:password])
       @user = user
+      session[:user_id] = @user.id
       return true
     end
 

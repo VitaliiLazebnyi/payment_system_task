@@ -39,9 +39,9 @@ RSpec.describe MerchantsController do
       expect(Merchant.last.name).to eq params[:name]
     end
 
-    it 'redirects back to merchant edit page' do
+    it 'returns 200 /ok/ response code' do
       put :update, params: { id: Merchant.last.id, merchant: params }
-      expect(response).to redirect_to(edit_merchant_url(Merchant.last))
+      expect(response).to have_http_status(:ok)
     end
   end
 
