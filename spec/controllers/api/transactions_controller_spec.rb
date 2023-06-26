@@ -4,7 +4,7 @@ RSpec.describe Api::TransactionsController do
   describe 'POST #create' do
     let(:merchant) { create(:merchant) }
     let(:merchant2) { create(:merchant) }
-    let(:transaction_params) { attributes_for(:authorize, user_id: merchant.id) }
+    let(:transaction_params) { attributes_for(:authorize, merchant_id: merchant.id) }
 
     before do
       allow(controller).to receive(:current_user).and_return(merchant)
@@ -32,7 +32,7 @@ RSpec.describe Api::TransactionsController do
     describe 'invalid parameters' do
       let(:transaction_params) do
         attributes_for(:authorize,
-                       user_id: merchant.id,
+                       merchant_id: merchant.id,
                        customer_email: nil)
       end
 
@@ -47,13 +47,13 @@ RSpec.describe Api::TransactionsController do
       end
     end
 
-    describe "user_id's in parameters and session are different" do
+    describe "merchant_id's in parameters and session are different" do
       before do
         allow(controller).to receive(:current_user).and_return(merchant)
       end
 
       let(:transaction_params) do
-        attributes_for(:authorize, user_id: merchant2.id)
+        attributes_for(:authorize, merchant_id: merchant2.id)
       end
 
       it "doesn't create a transaction" do
@@ -80,7 +80,7 @@ RSpec.describe Api::TransactionsController do
     end
 
     describe 'merchant tries to create a transaction for another merchant' do
-      let(:transaction_params) { attributes_for(:authorize, user_id: merchant2.id) }
+      let(:transaction_params) { attributes_for(:authorize, merchant_id: merchant2.id) }
 
       it "doesn't create a transaction" do
         expect { post :create, params: { transaction: transaction_params }, format: :json }

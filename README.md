@@ -1,5 +1,7 @@
 # Payment System Task
 
+## Native Application Usage
+
 ### Configure application
 1. Install Ruby&Rails [Manual](https://gorails.com/setup/ubuntu/22.04)
 2. Clone repository
@@ -13,8 +15,9 @@
    ````
 5. Create, migrate, seed databases:
    ````
-   rails db:drop db:create db:migrate db:seed
+   rails db:create db:migrate db:seed
    ````
+
 ### Run application
 ````
 rails s
@@ -35,12 +38,12 @@ Jobs log can be found at ``log/cron.log``.
 
 ### Execute tasks
 
-1. import users
-    ````
-     rake import:users filename=<filename>.xml
-    ````
+import users
+````
+rake import:users filename=<filename>.xml
+````
 
-    Example of users xml file can be found at ``spec/fixtures/users.xml``
+Example of users xml file can be found at ``spec/fixtures/users.xml``
 
 ### Execute tests
 ````
@@ -51,6 +54,8 @@ rspec
 ````
 rubocop
 ````
+
+## Docker Application Usage
 
 ### Execute Application with Docker
 ```

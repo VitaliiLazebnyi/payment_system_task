@@ -4,7 +4,7 @@ RSpec.describe TransactionCreator do
   let(:merchant) { create(:merchant) }
 
   describe 'correct params' do
-    let(:transaction_params) { attributes_for(:authorize, user_id: merchant.id) }
+    let(:transaction_params) { attributes_for(:authorize, merchant_id: merchant.id) }
 
     it 'creates a transaction' do
       success, transaction = described_class.call(transaction_params)
@@ -22,7 +22,7 @@ RSpec.describe TransactionCreator do
   end
 
   describe 'invalid params' do
-    let(:transaction_params) { attributes_for(:authorize, user_id: merchant.id, amount: -1000) }
+    let(:transaction_params) { attributes_for(:authorize, merchant_id: merchant.id, amount: -1000) }
 
     it 'creates a transaction' do
       success, transaction = described_class.call(transaction_params)

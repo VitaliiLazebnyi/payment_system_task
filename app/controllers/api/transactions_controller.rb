@@ -4,7 +4,7 @@ module Api
   class TransactionsController < ApplicationController
     skip_before_action :verify_authenticity_token
     before_action :ensure_json_request
-    before_action :validate_user_id
+    before_action :validate_merchant_id
 
     rescue_from CanCan::AccessDenied, with: :access_denied
 
@@ -20,8 +20,8 @@ module Api
 
     private
 
-    def validate_user_id
-      return true if current_user.id == params.require(:transaction)[:user_id]
+    def validate_merchant_id
+      return true if current_user.id == params.require(:transaction)[:merchant_id]
 
       render json: { error: 'User can create transactions only for himself' }, status: :unauthorized
     end
@@ -29,7 +29,7 @@ module Api
     def create_params
       params.require(:transaction)
             .permit(:amount, :status, :customer_email, :customer_phone,
-                    :type, :user_id, :reference_id)
+                    :type, :merchant_id, :reference_id)
     end
 
     def ensure_json_request
@@ -41,8 +41,8 @@ module Api
     def current_user
       return @current_user if @current_user
       authenticate_or_request_with_http_basic do |email, password|
-        user = User.find_by(email: email)
-        @current_user = user if user&.authenticate(password)
+        merchant = Merchant.find_by(email: email)
+        @current_user = merchant if merchant&.authenticate(password)
         !!@current_user
       end
     end
