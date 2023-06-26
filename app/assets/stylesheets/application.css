@@ -25,6 +25,7 @@
     background-color: #f1f1f1;
     padding: 10px;
     border: 1px solid #ccc;
+    font-weight: bold;
 }
 
 .row {
@@ -35,7 +36,22 @@
     display: table-cell;
     border: 1px solid #ccc;
     padding: 10px;
-    background-color: #f1f1f1;
+}
+
+.data {
+    background-color: #f7f7f7;
+}
+
+.save {
+    padding-top: 15px;
+    width: 340px;
+    display: flex;
+    justify-content: center;
+}
+
+.navigation {
+    display: flex;
+    justify-content: center;
 }
 
 .navigation_link {
@@ -43,6 +59,8 @@
     display: flex;
     justify-content: center;
     margin: 30px;
+    text-decoration: none;
+    color: #565656;
 }
 
 .centered-button {
@@ -59,4 +77,18 @@
 
 .centered-button:hover {
     background-color: #0056b3;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+button {
+    border-radius: 10px;
+    border: grey 1px solid;
+    padding: 8px;
+}
+
+a {
+
 }
