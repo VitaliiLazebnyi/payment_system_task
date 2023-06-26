@@ -11,7 +11,12 @@ class MerchantsController < ApplicationController
   def edit; end
 
   def update
-    @merchant.update(update_params)
+    if @merchant.update(update_params)
+      flash[:success] = t('models.update.success')
+    else
+      flash[:error] = t('models.update.failed')
+    end
+
     redirect_to edit_merchant_url(@merchant)
   end
 

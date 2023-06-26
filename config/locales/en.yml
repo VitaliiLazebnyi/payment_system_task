@@ -6,3 +6,7 @@ en:
       failed: "Invalid Email or Password"
     logout:
       success: "Logged Out"
+  models:
+    update:
+      success: 'Successfully updated'
+      failed: 'Failed to update'
