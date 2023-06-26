@@ -1,0 +1,18 @@
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - db
+    env_file:
+      - db_defaults.env
+    command: rails s -b 0.0.0.0
+  db:
+    image: postgres
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data
+    env_file:
+      - db_defaults.env
