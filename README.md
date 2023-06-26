@@ -13,7 +13,7 @@
    ````
 5. Create, migrate, seed databases:
    ````
-   rails db:create db:migrate db:seed
+   rails db:drop db:create db:migrate db:seed
    ````
 ### Run application
 ````
@@ -52,9 +52,28 @@ rspec
 rubocop
 ````
 
+### Execute Application with Docker
+```
+docker-compose build
+docker-compose run web rails db:create db:migrate db:seed
+docker-compose run --service-ports web rails s -b 0.0.0.0
+```
+
+### Execute Tests with Docker
+```
+docker-compose build
+docker-compose run web rails db:create db:migrate db:seed
+docker-compose run web rspec
+```
+
+### Remove docker caches when no need anymore
+```
+docker system prune
+```
+
 ### API
 
-1. Create Transactions
+Create Transactions
 
    POST   **/api/transactions**
 
@@ -78,5 +97,15 @@ rubocop
    Content-Type:"application/json"
    ```
 
-   To pass **Basic Auth** use existing Merchant **id** as username and his **email** like a password.
-   **user_id** in request and Merchant **id** from Basic Auth should be the same.
+   To pass **Basic Auth** use existing Merchant **email** as username and his **password** like a password.
+   **user_id** of Merchant in Basic Auth and **id** from Basic Auth should be the same.
+
+To reset passwords for existing users:
+1. Run Rails console
+   ```
+   rails c
+   ```
+2. Execute:
+   ```
+   User.all.each {|u| u.password = '<new password>'; u.save! }
+   ```
