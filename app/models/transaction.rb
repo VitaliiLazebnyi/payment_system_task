@@ -5,6 +5,11 @@ class Transaction < ApplicationRecord
   validate :proper_reference_chain
   validate :active_user, on: :create
 
+  validates :amount, numericality: { only_integer: true, equal_to: 0 },
+            if: ->{ type == 'Reversal' }
+  validates :amount, numericality: { only_integer: true, greater_than: 0 },
+            if: ->{ %w[Authorize Charge Refund].include?(type) }
+
   # Possible reference chains
   # Authorize Transaction -> Charge Transaction -> Refund Transaction
   # Authorize Transaction -> Reversal Transaction
@@ -16,9 +21,6 @@ class Transaction < ApplicationRecord
 
   enum :status, %i[approved reversed refunded error]
 
-  validates :amount,
-            presence: true,
-            numericality: { only_integer: true, greater_than_or_equal_to: 1 }
   validates :customer_email, presence: true, length: { minimum: 3 }
   validates :customer_phone, presence: true, length: { minimum: 3 }
   validates :type, presence: true
@@ -57,14 +59,6 @@ class Transaction < ApplicationRecord
 
     errors.add(:reference, "can't have '#{reference.class}' as a reference")
   end
-
-  # def amount_by_type
-  #   errors.add(:amount, :blank) if %w[Authorize Charge Refund].include?(type) && amount.empty?
-  #
-  #   return unless type == 'Reversal' && amount.present
-  #
-  #   errors.add(:amount, :present)
-  # end
 
   def active_user
     return if user&.active

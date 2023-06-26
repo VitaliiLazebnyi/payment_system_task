@@ -23,12 +23,6 @@ RSpec.describe Transaction do
   }
 
   it {
-    should validate_numericality_of(:amount)
-      .only_integer
-      .is_greater_than_or_equal_to(1)
-  }
-
-  it {
     should define_enum_for(:status)
       .with_values(%i[approved reversed refunded error])
   }
@@ -40,6 +34,48 @@ RSpec.describe Transaction do
   it { should validate_length_of(:customer_phone).is_at_least(3) }
 
   it { should validate_presence_of(:type) }
+
+  describe 'amound depending on type' do
+    context 'reversal transaction' do
+      subject { build(:reversal, user: build(:merchant)) }
+
+      it {
+        should validate_numericality_of(:amount)
+          .only_integer
+          .is_equal_to(0)
+      }
+    end
+
+    context 'refund transaction' do
+      subject { build(:refund, user: build(:merchant)) }
+
+      it {
+        should validate_numericality_of(:amount)
+                 .only_integer
+                 .is_greater_than(0)
+      }
+    end
+
+    context 'charge transaction' do
+      subject { build(:charge, user: build(:merchant)) }
+
+      it {
+        should validate_numericality_of(:amount)
+                 .only_integer
+                 .is_greater_than(0)
+      }
+    end
+
+    context 'authorize transaction' do
+      subject { build(:authorize, user: build(:merchant)) }
+
+      it {
+        should validate_numericality_of(:amount)
+                 .only_integer
+                 .is_greater_than(0)
+      }
+    end
+  end
 
   describe 'only approved or refunded can be referenced' do
     let(:merchant) { create(:merchant) }

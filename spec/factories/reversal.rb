@@ -3,5 +3,6 @@
 FactoryBot.define do
   factory :reversal, parent: :transaction do
     type { 'Reversal' }
+    amount { 0 }
   end
 end
