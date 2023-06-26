@@ -11,7 +11,6 @@ require 'rspec/rails'
 
 require 'capybara/rails'
 require 'capybara/rspec'
-require 'webdrivers'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -39,28 +38,7 @@ rescue ActiveRecord::PendingMigrationError => e
 end
 
 RSpec.configure do |config|
-  config.before(:all, type: :feature) do
-    Capybara.server = :puma, { Silent: true }
-    Capybara.ignore_hidden_elements = true
-  end
-
-  Capybara.register_driver :selenium do |app|
-    options = ::Selenium::WebDriver::Chrome::Options.new
-
-    # options.add_argument('--headless')
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-gpu')
-    options.add_argument('--disable-dev-shm-usage')
-    options.add_argument('--window-size=1366,720')
-
-    Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
-  end
-
-  Capybara.javascript_driver = :selenium
-
-  # js_driver = ENV['GUI'] == '1' ? :selenium_chrome : :selenium_chrome_headless
-  # Capybara.javascript_driver = js_driver
-
+  config.include SessionHelpers, type: :feature
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   # config.fixture_path = "#{Rails.root}/spec/fixtures"
 

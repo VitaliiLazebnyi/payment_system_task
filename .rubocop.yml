@@ -5,10 +5,12 @@ require:
   - rubocop-rails
   - rubocop-factory_bot
   - rubocop-md
+  - rubocop-capybara
 
 AllCops:
   TargetRubyVersion: 3.2
   NewCops: enable
+  SuggestExtensions: true
 
 Style/Documentation:
   Enabled: false
@@ -29,6 +31,8 @@ RSpec/ExampleLength:
     - array
     - hash
     - heredoc
+  Exclude:
+    - spec/acceptance/*_spec.rb
 
 RSpec/MultipleExpectations:
   Enabled: false
