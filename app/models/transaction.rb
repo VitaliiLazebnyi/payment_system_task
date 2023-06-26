@@ -46,8 +46,7 @@ class Transaction < ApplicationRecord
 
   def reference_only_approved_and_refunded
     return if !reference || %w[approved refunded].include?(reference.status)
-
-    errors.add(:reference, 'should be approved or refunded')
+    self.status = :error
   end
 
   def proper_reference_chain
