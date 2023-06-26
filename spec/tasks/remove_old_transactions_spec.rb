@@ -3,7 +3,7 @@
 describe 'rake remove:old:transactions' do
   before do
     time = 1.hour.ago - 1.second
-    create(:authorize, created_at: time, updated_at: time, user: create(:merchant))
+    create(:authorize, created_at: time, updated_at: time, merchant: create(:merchant))
   end
 
   it 'removes old transactions' do

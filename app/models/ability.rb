@@ -15,7 +15,7 @@ class Ability
 
     if user&.type == 'Merchant'
       can :index, Transaction
-      can :create, Transaction, user_id: user.id
+      can :create, Transaction, merchant_id: user.id
     end
 
     return unless user&.type == 'Admin'

@@ -25,7 +25,7 @@ class Transaction < ApplicationRecord
   validates :customer_phone, presence: true, length: { minimum: 3 }
   validates :type, presence: true
 
-  belongs_to :user
+  belongs_to :merchant
 
   has_one :reference,
           class_name: :Transaction,
@@ -61,7 +61,7 @@ class Transaction < ApplicationRecord
   end
 
   def active_user
-    return if user&.active
+    return if merchant&.active
 
     errors.add(:user, 'should be active')
   end

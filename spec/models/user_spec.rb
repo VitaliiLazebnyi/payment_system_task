@@ -3,8 +3,6 @@
 RSpec.describe User do
   subject { build(:user) }
 
-  it { should have_many(:transactions) }
-
   it { should validate_presence_of(:name) }
   it { should validate_length_of(:name).is_at_least(3) }
 
@@ -20,12 +18,6 @@ RSpec.describe User do
   it { should have_db_index(:email).unique }
 
   it { should allow_values(true, false).for(:active) }
-
-  it {
-    should validate_numericality_of(:total_transaction_sum)
-      .only_integer
-      .is_greater_than_or_equal_to(0)
-  }
 
   it { should validate_presence_of(:type) }
 

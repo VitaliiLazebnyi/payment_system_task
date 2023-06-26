@@ -6,7 +6,7 @@ div.transactions.table
     div.status.cell status
     div.customer_email.cell customer_email
     div.customer_phone.cell customer_phone
-    div.user_id.cell user_id
+    div.merchant_id.cell merchant_id
     div.reference_id.cell reference_id
 
   - @transactions.each do |transaction|
@@ -17,5 +17,5 @@ div.transactions.table
       div.status.cell=transaction.status
       div.customer_email.cell=transaction.customer_email
       div.customer_phone.cell=transaction.customer_phone
-      div.user_id.cell=transaction.user_id
+      div.merchant_id.cell=transaction.merchant_id
       div.reference_id.cell=transaction.reference_id

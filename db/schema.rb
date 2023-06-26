@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_23_080637) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_26_201556) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pgcrypto"
@@ -24,10 +24,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_23_080637) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "type"
-    t.uuid "user_id"
+    t.uuid "merchant_id"
     t.uuid "reference_id"
+    t.index ["merchant_id"], name: "index_transactions_on_merchant_id"
     t.index ["reference_id"], name: "index_transactions_on_reference_id"
-    t.index ["user_id"], name: "index_transactions_on_user_id"
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

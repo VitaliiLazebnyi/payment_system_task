@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Transaction do
-  subject { build(:transaction, user: build(:merchant)) }
+  subject { build(:transaction, merchant: build(:merchant)) }
 
-  it { should belong_to(:user) }
+  it { should belong_to(:merchant) }
 
   it {
     should have_one(:reference)
@@ -37,7 +37,7 @@ RSpec.describe Transaction do
 
   describe 'amound depending on type' do
     context 'reversal transaction' do
-      subject { build(:reversal, user: build(:merchant)) }
+      subject { build(:reversal, merchant: build(:merchant)) }
 
       it {
         should validate_numericality_of(:amount)
@@ -47,7 +47,7 @@ RSpec.describe Transaction do
     end
 
     context 'refund transaction' do
-      subject { build(:refund, user: build(:merchant)) }
+      subject { build(:refund, merchant: build(:merchant)) }
 
       it {
         should validate_numericality_of(:amount)
@@ -57,7 +57,7 @@ RSpec.describe Transaction do
     end
 
     context 'charge transaction' do
-      subject { build(:charge, user: build(:merchant)) }
+      subject { build(:charge, merchant: build(:merchant)) }
 
       it {
         should validate_numericality_of(:amount)
@@ -67,7 +67,7 @@ RSpec.describe Transaction do
     end
 
     context 'authorize transaction' do
-      subject { build(:authorize, user: build(:merchant)) }
+      subject { build(:authorize, merchant: build(:merchant)) }
 
       it {
         should validate_numericality_of(:amount)
@@ -79,8 +79,8 @@ RSpec.describe Transaction do
 
   describe 'only approved or refunded can be referenced' do
     let(:merchant) { create(:merchant) }
-    let(:reference) { create(:charge, user: merchant) }
-    let(:follow) { create(:refund, user: merchant) }
+    let(:reference) { create(:charge, merchant: merchant) }
+    let(:follow) { create(:refund, merchant: merchant) }
 
     it 'references approved' do
       reference.status = :approved
@@ -115,32 +115,32 @@ RSpec.describe Transaction do
     let(:merchant) { create(:merchant) }
 
     it 'Authorize can be references by Charge' do
-      reference = create(:authorize, user: merchant, status: :approved)
-      follow    = create(:charge, user: merchant, status: :approved)
+      reference = create(:authorize, merchant: merchant, status: :approved)
+      follow    = create(:charge, merchant: merchant, status: :approved)
       follow.reference = reference
       expect(follow.save).to be true
       expect(follow.errors).to be_empty
     end
 
     it 'Charge can be references by Refund' do
-      reference = create(:charge, user: merchant, status: :approved)
-      follow    = create(:refund, user: merchant, status: :approved)
+      reference = create(:charge, merchant: merchant, status: :approved)
+      follow    = create(:refund, merchant: merchant, status: :approved)
       follow.reference = reference
       expect(follow.save).to be true
       expect(follow.errors).to be_empty
     end
 
     it 'Authorize can be references by Reversal' do
-      reference = create(:authorize, user: merchant, status: :approved)
-      follow    = create(:reversal, user: merchant, status: :approved)
+      reference = create(:authorize, merchant: merchant, status: :approved)
+      follow    = create(:reversal, merchant: merchant, status: :approved)
       follow.reference = reference
       expect(follow.save).to be true
       expect(follow.errors).to be_empty
     end
 
     it "Reversal can't be references by another Reversal" do
-      reference = create(:reversal, user: merchant, status: :approved)
-      follow    = create(:reversal, user: merchant, status: :approved)
+      reference = create(:reversal, merchant: merchant, status: :approved)
+      follow    = create(:reversal, merchant: merchant, status: :approved)
       follow.reference = reference
       expect(follow.save).to be false
       expect(follow.errors).to be_present
@@ -148,7 +148,7 @@ RSpec.describe Transaction do
   end
 
   it "can't be created for inactive user" do
-    transaction = attributes_for(:transaction, user: build(:merchant, active: false))
+    transaction = attributes_for(:transaction, merchant: build(:merchant, active: false))
     transaction = described_class.new(transaction)
     expect(transaction.save).to be false
     expect(transaction.errors).to be_present

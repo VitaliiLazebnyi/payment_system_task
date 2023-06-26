@@ -6,4 +6,4 @@
 Admin.create!(name: 'Admin', password: SecureRandom.base36(64), description: 'admin', email: 'admin@email.com')
 merchant = Merchant.create!(name: 'Merchant', password: SecureRandom.base36(64), description: 'merchant',
                  email: 'merchant@email.com')
-Authorize.create!(user: merchant, customer_email: merchant.email, customer_phone: '+38093123456789', amount: 1)
+Authorize.create!(merchant: merchant, customer_email: merchant.email, customer_phone: '+38093123456789', amount: 1)

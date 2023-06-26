@@ -3,7 +3,7 @@
 RSpec.describe 'Show Transactions', type: :feature do
   let!(:admin) { create(:admin) }
   let!(:merchant) { create(:merchant) }
-  let!(:transaction) { create(:authorize, user: merchant) }
+  let!(:transaction) { create(:authorize, merchant: merchant) }
 
   it 'displays merchants data to admin' do
     login(admin)
@@ -16,7 +16,7 @@ RSpec.describe 'Show Transactions', type: :feature do
       expect(page).to have_content 'status'
       expect(page).to have_content 'customer_email'
       expect(page).to have_content 'customer_phone'
-      expect(page).to have_content 'user_id'
+      expect(page).to have_content 'merchant_id'
       expect(page).to have_content 'reference_id'
     end
 
@@ -27,7 +27,7 @@ RSpec.describe 'Show Transactions', type: :feature do
       expect(page).to have_content transaction.status
       expect(page).to have_content transaction.customer_email
       expect(page).to have_content transaction.customer_phone
-      expect(page).to have_content transaction.user_id
+      expect(page).to have_content transaction.merchant_id
       expect(page).to have_content transaction.reference_id
     end
   end

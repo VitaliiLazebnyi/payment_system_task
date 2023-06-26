@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Refund do
-  subject(:transaction) { build(:refund, user: merchant) }
+  subject(:transaction) { build(:refund, merchant: merchant) }
 
   let(:merchant) { build(:merchant) }
 
