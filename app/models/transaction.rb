@@ -6,9 +6,9 @@ class Transaction < ApplicationRecord
   validate :active_user, on: :create
 
   validates :amount, numericality: { only_integer: true, equal_to: 0 },
-            if: ->{ type == 'Reversal' }
+                     if: -> { type == 'Reversal' }
   validates :amount, numericality: { only_integer: true, greater_than: 0 },
-            if: ->{ %w[Authorize Charge Refund].include?(type) }
+                     if: -> { %w[Authorize Charge Refund].include?(type) }
 
   # Possible reference chains
   # Authorize Transaction -> Charge Transaction -> Refund Transaction

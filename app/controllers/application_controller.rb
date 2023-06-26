@@ -16,21 +16,23 @@ class ApplicationController < ActionController::Base
   def access_denied
     respond_to do |format|
       format.json { head :forbidden }
-      format.html { render file: "#{Rails.root}/public/403.html", layout: false, status: :forbidden }
+      format.html { render file: Rails.public_path.join('403.html').to_s, layout: false, status: :forbidden }
     end
   end
 
   def not_found
     respond_to do |format|
       format.json { head :not_found }
-      format.html { render file: "#{Rails.root}/public/404.html", layout: false, status: :not_found }
+      format.html { render file: Rails.public_path.join('404.html').to_s, layout: false, status: :not_found }
     end
   end
 
   def internal_error
     respond_to do |format|
       format.json { head :not_found }
-      format.html { render file: "#{Rails.root}/public/500.html", layout: false, status: :internal_server_error }
+      format.html do
+        render file: Rails.public_path.join('500.html').to_s, layout: false, status: :internal_server_error
+      end
     end
   end
 
