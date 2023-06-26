@@ -6,6 +6,8 @@ module Api
     before_action :ensure_json_request
     before_action :validate_user_id
 
+    rescue_from CanCan::AccessDenied, with: :access_denied
+
     def create
       authorize! :create, Transaction
       success, transaction = TransactionCreator.call(create_params)
@@ -34,6 +36,21 @@ module Api
       return if request.format.json?
 
       render json: { error: 'Invalid request format' }, status: :bad_request
+    end
+
+    def current_user
+      return @current_user if @current_user
+      authenticate_or_request_with_http_basic do |email, password|
+        user = User.find_by(email: email)
+        @current_user = user if user&.authenticate(password)
+        !!@current_user
+      end
+    end
+
+    def access_denied
+      respond_to do |format|
+        format.json { head :forbidden }
+      end
     end
   end
 end
