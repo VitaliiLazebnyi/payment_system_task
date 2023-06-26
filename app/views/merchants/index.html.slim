@@ -17,5 +17,5 @@ div.merchants.table
       div.amount.cell=merchant.email
       div.status.cell=merchant.active ? 'Active' : 'Inactive'
       div.total_transaction_sum.cell=merchant.total_transaction_sum
-      div.edit.cell=link_to 'Edit', edit_merchant_path(merchant), class: 'merchant_edit_link cell'
+      div.edit.cell=link_to 'Edit', edit_merchant_path(merchant)
       div.delete.cell=button_to 'Delete', merchant, remote: true, method: :delete

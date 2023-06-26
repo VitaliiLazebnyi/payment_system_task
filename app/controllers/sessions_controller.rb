@@ -9,17 +9,17 @@ class SessionsController < ApplicationController
   def create
     if authenticate
       session[:user_id] = @user.id
-      flash[:notice] = t('sessions.login.success')
+      flash[:success] = t('sessions.login.success')
       redirect_to '/'
     else
-      flash[:notice] = t('sessions.login.failed')
+      flash[:error] = t('sessions.login.failed')
       redirect_to "/login?email=#{params[:email]}"
     end
   end
 
   def destroy
     session[:user_id] = nil
-    flash[:notice] = t('sessions.logout.success')
+    flash[:success] = t('sessions.logout.success')
     redirect_to '/login'
   end
 

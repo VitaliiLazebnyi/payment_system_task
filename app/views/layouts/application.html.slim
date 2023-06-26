@@ -18,15 +18,13 @@ html
         = link_to 'Login', login_path, class: 'login_link navigation_link'
 
     .user
-      .label 'Username: '
-      .name = current_user&.name || 'No user'
+      .label Username:
+      .name=current_user&.name || 'No user'
 
     - if flash.present?
       .flash_messages
         - flash.each do |type, message|
-          .type
-            = type
-          .flash
+          div class="flash #{type}"
             = message
 
     = yield
