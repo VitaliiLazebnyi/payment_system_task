@@ -51,8 +51,8 @@ RSpec.describe Transaction do
 
       it {
         should validate_numericality_of(:amount)
-                 .only_integer
-                 .is_greater_than(0)
+          .only_integer
+          .is_greater_than(0)
       }
     end
 
@@ -61,8 +61,8 @@ RSpec.describe Transaction do
 
       it {
         should validate_numericality_of(:amount)
-                 .only_integer
-                 .is_greater_than(0)
+          .only_integer
+          .is_greater_than(0)
       }
     end
 
@@ -71,8 +71,8 @@ RSpec.describe Transaction do
 
       it {
         should validate_numericality_of(:amount)
-                 .only_integer
-                 .is_greater_than(0)
+          .only_integer
+          .is_greater_than(0)
       }
     end
   end
