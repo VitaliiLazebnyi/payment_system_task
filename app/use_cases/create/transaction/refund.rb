@@ -1,8 +1,11 @@
+# frozen_string_literal: true
+
 module UseCases
   module Create
     module Transaction
       class Charge < UseCase
         def initialize(params)
+          super
           @params = params.except(:type)
         end
 
@@ -27,28 +30,14 @@ module UseCases
           merchant.authorize! :create, transaction
         end
 
-        def validate_transaction
-          # check if present reference
-          raise unless @transaction.reference
-          # check if reference is a Authorize transaction with approved state
-          raise if @transaction.reference.type != 'Authorize'
-          # check if merchant from this and original transaction is the same
-          raise if @transaction.reference.merchant != @transaction.merchant
-          # check if customer is the same
-          raise if @transaction.reference.customer_email == @transaction.customer_email &&
-            @transaction.reference.customer_phone == @transaction.customer_phone
-          # check if customer has enough money on the balance
-          raise if @transaction.reference.amount < @transaction.amount
-
-          # set status 'Error' if validation didn't pass?
-        end
-
         def create_transaction
           transaction.save
         end
 
         def withdraw_from_merchants_account
-          # if the status is not :error
+          merchant = transaction.merchant
+          merchant.total_transaction_sum -= transaction.amount
+          merchant.save
         end
       end
     end

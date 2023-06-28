@@ -40,10 +40,11 @@ module Api
 
     def current_user
       return @current_user if @current_user
+
       authenticate_or_request_with_http_basic do |email, password|
-        merchant = Merchant.find_by(email: email)
+        merchant = Merchant.find_by(email:)
         @current_user = merchant if merchant&.authenticate(password)
-        !!@current_user
+        !@current_user.nil?
       end
     end
 
