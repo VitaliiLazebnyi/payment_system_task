@@ -5,8 +5,6 @@ class Ability
 
   # rubocop:disable Metrics/MethodLength
   def initialize(user)
-    # require 'pry'; binding.pry
-
     if user.is_a? User
       can :destroy, :session
     else
