@@ -10,22 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_26_201556) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_28_145255) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
   create_table "transactions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.integer "amount", default: 0
-    t.integer "status", default: 0, null: false
-    t.citext "customer_email", null: false
-    t.citext "customer_phone", null: false
+    t.integer "amount"
+    t.integer "status", default: 0
+    t.citext "customer_email"
+    t.citext "customer_phone"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "type"
     t.uuid "merchant_id"
     t.uuid "reference_id"
+    t.text "validation_errors"
     t.index ["merchant_id"], name: "index_transactions_on_merchant_id"
     t.index ["reference_id"], name: "index_transactions_on_reference_id"
   end
