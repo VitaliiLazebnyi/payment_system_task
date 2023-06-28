@@ -28,7 +28,8 @@ RSpec.describe TransactionCreator do
       success, transaction = described_class.call(transaction_params)
       expect(success).to be false
       expect(transaction.type).to eq 'Authorize'
-      expect(transaction.errors).to be_present
+      expect(transaction.status).to eq 'error'
+      expect(transaction.validation_errors).to be_present
     end
 
     it "doesn't update Merchant's total_transaction_sum" do

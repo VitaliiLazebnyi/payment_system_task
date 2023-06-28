@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Refund < Transaction
-  validates :references, presence: true
+  validates :reference, presence: true
   validate :reference_type
   validate :reference_merchant
   validate :reference_customer_email

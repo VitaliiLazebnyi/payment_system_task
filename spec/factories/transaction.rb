@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :transaction do
     amount { rand(1..10_000) }
-    status { Transaction.statuses.keys.sample }
+    status { :approved }
     customer_email { "email_#{Time.now.to_f}@gmail.com" }
     customer_phone { "+380#{Time.now.to_i}" }
   end
