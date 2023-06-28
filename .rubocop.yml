@@ -19,6 +19,10 @@ Metrics/MethodLength:
   Exclude:
     - db/migrate/*.rb
 
+Metrics/BlockLength:
+  Exclude:
+    - app/models/concerns/*.rb
+
 RSpec/ImplicitSubject:
   EnforcedStyle: require_implicit
 
@@ -49,6 +53,9 @@ RSpec/RepeatedExampleGroupBody:
 
 RSpec/MessageSpies:
   EnforcedStyle: receive
+
+RSpec/SubjectStub:
+  Enabled: false
 
 Lint/MissingSuper:
   Exclude:
