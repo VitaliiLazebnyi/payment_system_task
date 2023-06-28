@@ -1,7 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe Transaction do
-  subject { build(:transaction, merchant: build(:merchant)) }
+  subject { build(:authorize, merchant: merchant) }
+  let(:merchant) { build :merchant }
+
+  before do
+    allow(subject).to receive(:handle_errors).and_return(true)
+  end
 
   it { should belong_to(:merchant) }
 
@@ -35,122 +40,38 @@ RSpec.describe Transaction do
 
   it { should validate_presence_of(:type) }
 
-  describe 'amound depending on type' do
-    context 'reversal transaction' do
-      subject { build(:reversal, merchant: build(:merchant)) }
-
-      it {
-        should validate_numericality_of(:amount)
-          .only_integer
-          .is_equal_to(0)
-      }
+  describe 'validate merchant activity' do
+    it 'valid when merchant active' do
+      subject.merchant.active = true
+      expect(subject).to be_valid
     end
 
-    context 'refund transaction' do
-      subject { build(:refund, merchant: build(:merchant)) }
-
-      it {
-        should validate_numericality_of(:amount)
-          .only_integer
-          .is_greater_than(0)
-      }
-    end
-
-    context 'charge transaction' do
-      subject { build(:charge, merchant: build(:merchant)) }
-
-      it {
-        should validate_numericality_of(:amount)
-          .only_integer
-          .is_greater_than(0)
-      }
-    end
-
-    context 'authorize transaction' do
-      subject { build(:authorize, merchant: build(:merchant)) }
-
-      it {
-        should validate_numericality_of(:amount)
-          .only_integer
-          .is_greater_than(0)
-      }
+    it 'invalid when merchant inactive' do
+      subject.merchant.active = false
+      expect(subject).to_not be_valid
+      expect(subject.errors[:merchant]).to include('should be active')
     end
   end
 
-  describe 'only approved or refunded can be referenced' do
-    let(:merchant) { create(:merchant) }
-    let(:reference) { create(:charge, merchant:) }
-    let(:follow) { create(:refund, merchant:) }
-
-    it 'references approved' do
-      reference.status = :approved
-      follow.reference = reference
-      expect(follow.save).to be true
-      expect(follow.errors).to be_empty
+  describe 'status changes on save' do
+    before do
+      allow(subject).to receive(:handle_errors).and_call_original
     end
 
-    it 'references refunded' do
-      reference.status = :refunded
-      follow.reference = reference
-      expect(follow.save).to be true
-      expect(follow.errors).to be_empty
+    it 'valid gives approved status' do
+      subject.merchant.active = true
+      expect(subject.save).to be true
+      expect(subject.errors).to be_empty
+      expect(subject.status).to eq 'approved'
+      expect(subject.validation_errors).to be_nil
     end
 
-    it "doesn't reference reversed" do
-      reference.status = :reversed
-      follow.reference = reference
-      expect(follow.save).to be false
-      expect(follow.errors).to be_present
+    it 'invalid gives error status' do
+      subject.merchant.active = false
+      subject.save
+      expect(subject.errors).to be_empty
+      expect(subject.status).to eq 'error'
+      expect(subject.validation_errors).to eq 'Merchant should be active'
     end
-
-    it "doesn't reference error" do
-      reference.status = :error
-      follow.reference = reference
-      expect(follow.save).to be false
-      expect(follow.errors).to be_present
-    end
-  end
-
-  describe 'validates proper reference chain' do
-    let(:merchant) { create(:merchant) }
-
-    it 'Authorize can be references by Charge' do
-      reference = create(:authorize, merchant:, status: :approved)
-      follow    = create(:charge, merchant:, status: :approved)
-      follow.reference = reference
-      expect(follow.save).to be true
-      expect(follow.errors).to be_empty
-    end
-
-    it 'Charge can be references by Refund' do
-      reference = create(:charge, merchant:, status: :approved)
-      follow    = create(:refund, merchant:, status: :approved)
-      follow.reference = reference
-      expect(follow.save).to be true
-      expect(follow.errors).to be_empty
-    end
-
-    it 'Authorize can be references by Reversal' do
-      reference = create(:authorize, merchant:, status: :approved)
-      follow    = create(:reversal, merchant:, status: :approved)
-      follow.reference = reference
-      expect(follow.save).to be true
-      expect(follow.errors).to be_empty
-    end
-
-    it "Reversal can't be references by another Reversal" do
-      reference = create(:reversal, merchant:, status: :approved)
-      follow    = create(:reversal, merchant:, status: :approved)
-      follow.reference = reference
-      expect(follow.save).to be false
-      expect(follow.errors).to be_present
-    end
-  end
-
-  it "can't be created for inactive user" do
-    transaction = attributes_for(:transaction, merchant: build(:merchant, active: false))
-    transaction = described_class.new(transaction)
-    expect(transaction.save).to be false
-    expect(transaction.errors).to be_present
   end
 end

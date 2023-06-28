@@ -37,10 +37,12 @@ class Transaction < ApplicationRecord
 
   def handle_errors
     if errors.present?
-      errors.full_messages.join("\n")
-      :error
+      self.validation_errors = errors.full_messages.join("\n")
+      self.status = 'error'
     else
-      :approved
+      self.status = 'approved'
     end
+
+    errors.clear
   end
 end
