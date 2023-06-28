@@ -108,9 +108,12 @@ Create Transactions
 To reset passwords for existing users:
 1. Run Rails console
    ```
-   rails c
+rails c
    ```
 2. Execute:
    ```
-   User.all.each {|u| u.password = '<new password>'; u.save! }
+User.all.each do |u|
+  u.password = '<new password>'
+  u.save!
+end
    ```

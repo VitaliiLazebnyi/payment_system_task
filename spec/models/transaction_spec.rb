@@ -79,8 +79,8 @@ RSpec.describe Transaction do
 
   describe 'only approved or refunded can be referenced' do
     let(:merchant) { create(:merchant) }
-    let(:reference) { create(:charge, merchant: merchant) }
-    let(:follow) { create(:refund, merchant: merchant) }
+    let(:reference) { create(:charge, merchant:) }
+    let(:follow) { create(:refund, merchant:) }
 
     it 'references approved' do
       reference.status = :approved
@@ -115,32 +115,32 @@ RSpec.describe Transaction do
     let(:merchant) { create(:merchant) }
 
     it 'Authorize can be references by Charge' do
-      reference = create(:authorize, merchant: merchant, status: :approved)
-      follow    = create(:charge, merchant: merchant, status: :approved)
+      reference = create(:authorize, merchant:, status: :approved)
+      follow    = create(:charge, merchant:, status: :approved)
       follow.reference = reference
       expect(follow.save).to be true
       expect(follow.errors).to be_empty
     end
 
     it 'Charge can be references by Refund' do
-      reference = create(:charge, merchant: merchant, status: :approved)
-      follow    = create(:refund, merchant: merchant, status: :approved)
+      reference = create(:charge, merchant:, status: :approved)
+      follow    = create(:refund, merchant:, status: :approved)
       follow.reference = reference
       expect(follow.save).to be true
       expect(follow.errors).to be_empty
     end
 
     it 'Authorize can be references by Reversal' do
-      reference = create(:authorize, merchant: merchant, status: :approved)
-      follow    = create(:reversal, merchant: merchant, status: :approved)
+      reference = create(:authorize, merchant:, status: :approved)
+      follow    = create(:reversal, merchant:, status: :approved)
       follow.reference = reference
       expect(follow.save).to be true
       expect(follow.errors).to be_empty
     end
 
     it "Reversal can't be references by another Reversal" do
-      reference = create(:reversal, merchant: merchant, status: :approved)
-      follow    = create(:reversal, merchant: merchant, status: :approved)
+      reference = create(:reversal, merchant:, status: :approved)
+      follow    = create(:reversal, merchant:, status: :approved)
       follow.reference = reference
       expect(follow.save).to be false
       expect(follow.errors).to be_present

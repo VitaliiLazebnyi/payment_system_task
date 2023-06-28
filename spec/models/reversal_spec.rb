@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Reversal do
-  subject(:transaction) { build(:refund, merchant: merchant) }
+  subject(:transaction) { build(:refund, merchant:) }
 
   let(:merchant) { build(:merchant) }
 

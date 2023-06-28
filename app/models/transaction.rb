@@ -31,15 +31,16 @@ class Transaction < ApplicationRecord
 
   def active_merchant
     return if merchant&.active
+
     errors.add(:merchant, 'should be active')
   end
 
   def handle_errors
     if errors.present?
-      validation_errors = errors.full_messages.join("\n")
-      status = :error
+      errors.full_messages.join("\n")
+      :error
     else
-      status = :approved
+      :approved
     end
   end
 end

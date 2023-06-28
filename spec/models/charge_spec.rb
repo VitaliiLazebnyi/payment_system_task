@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Charge do
-  subject(:transaction) { build(:charge, merchant: merchant) }
+  subject(:transaction) { build(:charge, merchant:) }
 
   let(:merchant) { build(:merchant) }
 

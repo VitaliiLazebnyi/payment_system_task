@@ -3,7 +3,7 @@
 RSpec.describe 'Show Transactions', type: :feature do
   let!(:admin) { create(:admin) }
   let!(:merchant) { create(:merchant) }
-  let!(:transaction) { create(:authorize, merchant: merchant) }
+  let!(:transaction) { create(:authorize, merchant:) }
 
   it 'displays merchants data to admin' do
     login(admin)

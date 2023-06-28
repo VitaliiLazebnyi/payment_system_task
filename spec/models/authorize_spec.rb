@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Authorize do
-  subject(:transaction) { build(:authorize, merchant: merchant) }
+  subject(:transaction) { build(:authorize, merchant:) }
 
   let(:merchant) { build(:merchant) }
 
