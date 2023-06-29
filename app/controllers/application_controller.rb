@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   before_action :require_login
 
   rescue_from CanCan::AccessDenied, with: :access_denied
+  rescue_from ArgumentError, with: :argument_error
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
   rescue_from ActiveRecord::RecordInvalid, with: :internal_error
 
@@ -17,6 +18,13 @@ class ApplicationController < ActionController::Base
     respond_to do |format|
       format.json { head :forbidden }
       format.html { render file: Rails.public_path.join('403.html').to_s, layout: false, status: :forbidden }
+    end
+  end
+
+  def argument_error(exception)
+    respond_to do |format|
+      format.json { render json: { error: exception.message }, status: :bad_request }
+      format.html { render file: Rails.public_path.join('400.html').to_s, layout: false, status: :bad_request }
     end
   end
 
