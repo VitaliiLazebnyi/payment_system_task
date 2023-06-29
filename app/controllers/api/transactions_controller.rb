@@ -5,6 +5,7 @@ module Api
     skip_before_action :verify_authenticity_token
     before_action :ensure_json_request
     before_action :validate_merchant_id
+    before_action :validate_transaction_type
 
     rescue_from CanCan::AccessDenied, with: :access_denied
 
@@ -24,6 +25,12 @@ module Api
       return true if current_user.id == params.require(:transaction)[:merchant_id]
 
       render json: { error: 'User can create transactions only for himself' }, status: :unauthorized
+    end
+
+    def validate_transaction_type
+      return if Transaction::CLASSES.include?(create_params[:type])
+
+      raise ArgumentError, 'invalid transaction type'
     end
 
     def create_params

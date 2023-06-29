@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
 class Transaction < ApplicationRecord
+  CLASSES = %w[Authorize Charge Refund Reversal].freeze
+
   after_validation :handle_errors
 
   enum :status, %i[approved reversed refunded error]
 
   validates :customer_email, presence: true, length: { minimum: 3 }
   validates :customer_phone, presence: true, length: { minimum: 3 }
-  validates :type, presence: true
+  validates :type, presence: true, inclusion: { in: CLASSES }
   validate :active_merchant, on: :create
 
   belongs_to :merchant
