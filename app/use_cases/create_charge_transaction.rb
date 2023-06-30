@@ -20,7 +20,7 @@ class CreateChargeTransaction
   private
 
   def load_authorize_transaction
-    @authorize   = Authorize.find(params[:reference_id])
+    @authorize = Authorize.find(params[:reference_id])
     params.merge!(reference: @authorize)
   end
 
@@ -43,6 +43,7 @@ class CreateChargeTransaction
 
   def top_up_merchants_account
     return if transaction.validation_errors
+
     merchant = transaction.merchant
     merchant.total_transaction_sum += transaction.amount
     merchant.save

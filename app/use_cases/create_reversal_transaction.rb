@@ -20,7 +20,7 @@ class CreateReversalTransaction
   private
 
   def load_authorize_transaction
-    @authorize   = Authorize.find(params[:reference_id])
+    @authorize = Authorize.find(params[:reference_id])
     params.merge!(reference: @authorize)
   end
 
@@ -44,6 +44,7 @@ class CreateReversalTransaction
 
   def invalidate_authorize_transaction
     return if transaction.validation_errors
+
     @authorize.update!(status: :reversed)
   end
 end

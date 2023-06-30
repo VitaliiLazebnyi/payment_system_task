@@ -3,7 +3,7 @@
 class Transaction < ApplicationRecord
   CLASSES = %w[Authorize Charge Refund Reversal].freeze
 
-  enum status: %i[approved reversed refunded error]
+  enum status: { approved: 0, reversed: 1, refunded: 2, error: 3 }
 
   validates :customer_email, presence: true, length: { minimum: 3 }
   validates :customer_phone, presence: true, length: { minimum: 3 }
@@ -12,14 +12,18 @@ class Transaction < ApplicationRecord
 
   belongs_to :merchant
 
-  has_one :follow, class_name: 'Transaction', foreign_key: 'reference_id'
+  has_one :follow,
+          class_name: 'Transaction',
+          foreign_key: 'reference_id',
+          inverse_of: :reference,
+          dependent: :destroy
 
   private
 
   def log_validation_errors(errors)
-    validation_errors = '' unless validation_errors
+    validation_errors ||= ''
     divider = validation_errors.empty? ? '' : "\n"
-    validation_errors << divider + errors
+    validation_errors << (divider + errors)
   end
 
   def active_merchant

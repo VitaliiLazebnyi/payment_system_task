@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Refund < Transaction
-  belongs_to :reference, class_name: 'Charge', foreign_key: 'reference_id', optional: true
+  belongs_to :reference, class_name: 'Charge', optional: true
 
   validates :reference, presence: true
   validate :reference_type
