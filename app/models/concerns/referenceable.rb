@@ -4,6 +4,8 @@ module Referenceable
   extend ActiveSupport::Concern
 
   included do
+    belongs_to :reference, class_name: 'Authorize', foreign_key: 'reference_id', optional: true
+
     validates :reference, presence: true
     validate :reference_type
     validate :reference_merchant

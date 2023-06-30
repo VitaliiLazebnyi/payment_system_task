@@ -3,13 +3,16 @@
 class ApplicationController < ActionController::Base
   before_action :require_login
 
-  rescue_from CanCan::AccessDenied, with: :access_denied
-  rescue_from ArgumentError, with: :argument_error
-  rescue_from ActiveRecord::RecordNotFound, with: :not_found
-  rescue_from ActiveRecord::RecordInvalid, with: :internal_error
+  # rescue_from CanCan::AccessDenied, with: :access_denied
+  # rescue_from ArgumentError, with: :argument_error
+  # rescue_from ActiveRecord::RecordNotFound, with: :not_found
+  # rescue_from ActiveRecord::RecordInvalid, with: :internal_error
 
   def current_user
     @current_user ||= User.find(session[:user_id]) if session[:user_id]
+  rescue ActiveRecord::RecordNotFound
+    session[:user_id] = nil
+    @current_user = nil
   end
 
   private
