@@ -33,12 +33,16 @@ class CreateChargeTransaction
   end
 
   def save_transaction
-    # require 'pry'; binding.pry
-    transaction.save
+    transaction.valid?
+    if transaction.errors.present?
+      log_validation_errors(transaction.errors.full_messages.join("\n"))
+      transaction.status = :error
+    end
+    transaction.save(validate: false)
   end
 
   def top_up_merchants_account
-    return if transaction.validation_errors || !transaction.amount
+    return if transaction.validation_errors
     merchant = transaction.merchant
     merchant.total_transaction_sum += transaction.amount
     merchant.save

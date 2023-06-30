@@ -15,6 +15,7 @@ class CreateRefundTransaction
     authorize!
     save_transaction
     withdraw_from_merchants_account
+    invalidate_charge_transaction
   end
 
   private
@@ -34,13 +35,23 @@ class CreateRefundTransaction
   end
 
   def save_transaction
-    transaction.save
+    transaction.valid?
+    if transaction.errors.present?
+      log_validation_errors(transaction.errors.full_messages.join("\n"))
+      transaction.status = :error
+    end
+    transaction.save(validate: false)
   end
 
   def withdraw_from_merchants_account
-    return if transaction.validation_errors || !transaction.amount
+    return if transaction.validation_errors
     merchant = transaction.merchant
     merchant.total_transaction_sum -= transaction.amount
     merchant.save
+  end
+
+  def invalidate_charge_transaction
+    return if transaction.validation_errors
+    @charge.update!(status: :refunded)
   end
 end

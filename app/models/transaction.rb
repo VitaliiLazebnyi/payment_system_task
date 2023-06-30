@@ -3,8 +3,6 @@
 class Transaction < ApplicationRecord
   CLASSES = %w[Authorize Charge Refund Reversal].freeze
 
-  after_validation :handle_errors
-
   enum status: %i[approved reversed refunded error]
 
   validates :customer_email, presence: true, length: { minimum: 3 }
@@ -18,20 +16,15 @@ class Transaction < ApplicationRecord
 
   private
 
+  def log_validation_errors(errors)
+    validation_errors = '' unless validation_errors
+    divider = validation_errors.empty? ? '' : "\n"
+    validation_errors << divider + errors
+  end
+
   def active_merchant
     return if merchant&.active
 
     errors.add(:merchant, 'should be active')
-  end
-
-  def handle_errors
-    if errors.present?
-      self.validation_errors = "#{self.validation_errors}\n#{errors.full_messages.join("\n")}"
-      self.status = 'error'
-    end
-
-    errors.clear
-    # require 'pry'; binding.pry
-    # true
   end
 end
