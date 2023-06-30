@@ -21,7 +21,7 @@ class CreateRefundTransaction
   private
 
   def load_charge_transaction
-    @charge   = Charge.find(params[:reference_id])
+    @charge = Charge.find(params[:reference_id])
     # params.merge!(reference: @charge)
   end
 
@@ -45,6 +45,7 @@ class CreateRefundTransaction
 
   def withdraw_from_merchants_account
     return if transaction.validation_errors
+
     merchant = transaction.merchant
     merchant.total_transaction_sum -= transaction.amount
     merchant.save
@@ -52,6 +53,7 @@ class CreateRefundTransaction
 
   def invalidate_charge_transaction
     return if transaction.validation_errors
+
     @charge.update!(status: :refunded)
   end
 end
