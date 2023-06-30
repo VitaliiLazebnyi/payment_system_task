@@ -34,12 +34,16 @@ class CreateReversalTransaction
   end
 
   def save_transaction
-    # require 'pry'; binding.pry
-    transaction.save!
+    transaction.valid?
+    if transaction.errors.present?
+      log_validation_errors(transaction.errors.full_messages.join("\n"))
+      transaction.status = :error
+    end
+    transaction.save(validate: false)
   end
 
   def invalidate_authorize_transaction
-    # require 'pry'; binding.pry
+    return if transaction.validation_errors
     @authorize.update!(status: :reversed)
   end
 end
