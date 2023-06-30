@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Refund < Transaction
+  belongs_to :reference, class_name: 'Charge', foreign_key: 'reference_id', optional: true
+
   validates :reference, presence: true
   validate :reference_type
   validate :reference_merchant
@@ -12,9 +14,9 @@ class Refund < Transaction
   private
 
   def reference_type
-    return if reference&.type == 'Authorize'
+    return if reference&.type == 'Charge'
 
-    errors.add(:reference, 'can reference only Authorize transaction')
+    errors.add(:reference, 'can reference only Charge transaction')
   end
 
   def reference_merchant
