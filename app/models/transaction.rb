@@ -12,12 +12,6 @@ class Transaction < ApplicationRecord
 
   belongs_to :merchant
 
-  has_one :follow,
-          class_name: 'Transaction',
-          foreign_key: 'reference_id',
-          inverse_of: :reference,
-          dependent: :destroy
-
   private
 
   def log_validation_errors(errors)

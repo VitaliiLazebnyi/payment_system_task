@@ -47,6 +47,8 @@ group :development, :test do
   gem 'debug', platforms: %i[mri mingw x64_mingw]
 
   gem 'pry'
+  gem 'pry-nav'
+  gem 'pry-rescue'
 
   gem 'capybara'
 end

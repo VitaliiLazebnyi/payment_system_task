@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_28_145255) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_30_150957) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pgcrypto"
@@ -26,7 +26,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_28_145255) do
     t.string "type"
     t.uuid "merchant_id"
     t.uuid "reference_id"
-    t.text "validation_errors"
     t.index ["merchant_id"], name: "index_transactions_on_merchant_id"
     t.index ["reference_id"], name: "index_transactions_on_reference_id"
   end

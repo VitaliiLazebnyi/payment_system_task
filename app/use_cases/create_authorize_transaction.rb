@@ -3,9 +3,10 @@
 class CreateAuthorizeTransaction
   include UseCase
 
-  attr_reader :params, :transaction
+  attr_reader :user, :params, :transaction
 
-  def initialize(params)
+  def initialize(user, params)
+    @user = user
     @params = params.except(:type)
   end
 
@@ -22,13 +23,13 @@ class CreateAuthorizeTransaction
   end
 
   def authorize!
-    transaction.merchant.authorize! :create, transaction
+    user.authorize! :create, transaction
   end
 
   def save_transaction
     transaction.valid?
     if transaction.errors.present?
-      log_validation_errors(transaction.errors.full_messages.join("\n"))
+      save_errors(transaction.errors.full_messages)
       transaction.status = :error
     end
     transaction.save(validate: false)

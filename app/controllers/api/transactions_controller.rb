@@ -10,14 +10,16 @@ module Api
     def create
       authorize! :create, Transaction
       use_case = CreateTransaction.perform(current_user, create_params)
-      render json: use_case.transaction, status: :created
+      render json: { transaction: use_case.transaction,
+                     errors: use_case.errors },
+             status: :created
     end
 
     private
 
     def create_params
       params.require(:transaction)
-            .permit(:amount, :status, :customer_email, :customer_phone,
+            .permit(:amount, :customer_email, :customer_phone,
                     :type, :merchant_id, :reference_id)
     end
 

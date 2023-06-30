@@ -24,18 +24,22 @@ class CreateTransaction
   def validate_merchant_id
     return true if user.id == params[:merchant_id]
 
-    raise ArgumentError, 'Merchant_id should be the same as current_user.id'
+    save_error('Merchant_id should be the same as current_user.id')
   end
 
   def validate_transaction_type
-    return if Transaction::CLASSES.include?(params[:type])
+    return true if Transaction::CLASSES.include?(params[:type])
 
-    raise ArgumentError, 'invalid transaction type'
+    save_error('Type invalid')
   end
 
   def create_transaction
+    # transaction will not be created if failed basic validations
+    return false if errors?
+
     use_case = "Create#{params[:type]}Transaction".constantize
-    use_case = use_case.perform(params)
+    use_case = use_case.perform(user, params)
     @transaction = use_case.transaction
+    save_errors(use_case.errors)
   end
 end
