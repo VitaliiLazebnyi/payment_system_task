@@ -3,18 +3,21 @@
 class CreateReversalTransaction
   include UseCase
 
-  attr_reader :params, :transaction
+  attr_reader :user, :params, :transaction
 
-  def initialize(params)
+  def initialize(user, params)
+    @user = user
     @params = params.except(:type)
   end
 
   def perform
-    load_authorize_transaction
-    prepare_transaction
-    authorize!
-    save_transaction
-    invalidate_authorize_transaction
+    ActiveRecord::Base.transaction do
+      load_authorize_transaction
+      prepare_transaction
+      authorize!
+      save_transaction
+      invalidate_authorize_transaction
+    end
   end
 
   private
@@ -22,6 +25,8 @@ class CreateReversalTransaction
   def load_authorize_transaction
     @authorize = Authorize.find(params[:reference_id])
     params.merge!(reference: @authorize)
+  rescue ActiveRecord::RecordNotFound
+    save_error('Reference not found')
   end
 
   def prepare_transaction
@@ -29,21 +34,20 @@ class CreateReversalTransaction
   end
 
   def authorize!
-    merchant = Merchant.find(params[:merchant_id])
-    merchant.authorize! :create, transaction
+    user.authorize! :create, transaction
   end
 
   def save_transaction
     transaction.valid?
     if transaction.errors.present?
-      log_validation_errors(transaction.errors.full_messages.join("\n"))
+      save_errors(transaction.errors.full_messages)
       transaction.status = :error
     end
     transaction.save(validate: false)
   end
 
   def invalidate_authorize_transaction
-    return if transaction.validation_errors
+    return false if errors?
 
     @authorize.update!(status: :reversed)
   end

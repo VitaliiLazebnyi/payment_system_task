@@ -3,9 +3,10 @@
 class CreateRefundTransaction
   include UseCase
 
-  attr_reader :params, :transaction
+  attr_reader :user, :params, :transaction
 
-  def initialize(params)
+  def initialize(user, params)
+    @user = user
     @params = params.except(:type)
   end
 
@@ -22,7 +23,9 @@ class CreateRefundTransaction
 
   def load_charge_transaction
     @charge = Charge.find(params[:reference_id])
-    # params.merge!(reference: @charge)
+    params.merge!(reference: @charge)
+  rescue ActiveRecord::RecordNotFound
+    save_error('Reference not found')
   end
 
   def prepare_transaction
@@ -30,21 +33,21 @@ class CreateRefundTransaction
   end
 
   def authorize!
-    merchant = Merchant.find(params[:merchant_id])
-    merchant.authorize! :create, transaction
+    user.authorize! :create, transaction
   end
 
   def save_transaction
     transaction.valid?
+    # require 'pry'; binding.pry
     if transaction.errors.present?
-      log_validation_errors(transaction.errors.full_messages.join("\n"))
+      save_errors(transaction.errors.full_messages)
       transaction.status = :error
     end
     transaction.save(validate: false)
   end
 
   def withdraw_from_merchants_account
-    return if transaction.validation_errors
+    return false if errors?
 
     merchant = transaction.merchant
     merchant.total_transaction_sum -= transaction.amount
@@ -52,7 +55,7 @@ class CreateRefundTransaction
   end
 
   def invalidate_charge_transaction
-    return if transaction.validation_errors
+    return false if errors
 
     @charge.update!(status: :refunded)
   end
