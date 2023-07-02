@@ -115,6 +115,8 @@ GEM
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
     json (2.6.3)
+    json-schema (3.0.0)
+      addressable (>= 2.8)
     language_server-protocol (3.17.0.3)
     loofah (2.21.3)
       crass (~> 1.0.2)
@@ -216,6 +218,16 @@ GEM
       rspec-mocks (~> 3.12)
       rspec-support (~> 3.12)
     rspec-support (3.12.1)
+    rswag-api (2.9.0)
+      railties (>= 3.1, < 7.1)
+    rswag-specs (2.9.0)
+      activesupport (>= 3.1, < 7.1)
+      json-schema (>= 2.2, < 4.0)
+      railties (>= 3.1, < 7.1)
+      rspec-core (>= 2.14)
+    rswag-ui (2.9.0)
+      actionpack (>= 3.1, < 7.1)
+      railties (>= 3.1, < 7.1)
     rubocop (1.53.1)
       json (~> 2.3)
       language_server-protocol (>= 3.17.0)
@@ -318,6 +330,9 @@ DEPENDENCIES
   rails (~> 7.0, >= 7.0.4.3)
   rails-controller-testing
   rspec-rails (~> 6.0)
+  rswag-api
+  rswag-specs
+  rswag-ui
   rubocop (~> 1.51)
   rubocop-factory_bot
   rubocop-md

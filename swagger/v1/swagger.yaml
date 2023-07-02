@@ -1,0 +1,146 @@
+---
+components:
+  securitySchemes:
+    basic_auth:
+      type: http
+      scheme: basic
+      name: Authorization
+  transaction_in:
+    type: object
+    properties:
+      amount:
+        type: integer
+        minimum: 1
+        example: 1000
+      customer_email:
+        type: string
+        minLength: 3
+        example: customer@email.com
+      customer_phone:
+        type: string
+        minLength: 3
+        example: "+38093123456789"
+      type:
+        type: string
+        enum:
+        - Authorize
+        - Reversal
+        - Charge
+        - Refund
+        example: Authorize
+        description: Transaction will not be created at all if type is invalid or
+          absent.
+      merchant_id:
+        type: string
+        format: uuid
+        example: 5578ec3a-c9d3-49e1-b91c-5d321ced56aa
+      reference_id:
+        type: string
+        format: uuid
+        example: 
+        description: Transaction with the same customer and merchant which can be
+          changed by current transaction.
+    required:
+    - customer_email
+    - type
+    - customer_phone
+    - merchant_id
+  transaction_out:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: c285d56b-b972-4a56-9bef-17516902d5dd
+      amount:
+        type: integer
+        minimum: 1
+        example: 1000
+      status:
+        type: string
+        enum:
+        - approved
+        - reversed
+        - refunded
+        - error
+        example: approved
+      customer_email:
+        type: string
+        minLength: 3
+        example: customer@email.com
+      customer_phone:
+        type: string
+        minLength: 3
+        example: "+38093123456789"
+      created_at:
+        type: string
+        format: date-time
+        example: '2023-06-30T21:31:32.999Z'
+      updated_at:
+        type: string
+        format: date-time
+        example: '2023-06-30T21:31:32.999Z'
+      merchant_id:
+        type: string
+        format: uuid
+        example: 5578ec3a-c9d3-49e1-b91c-5d321ced56aa
+      reference_id:
+        type: string
+        format: uuid
+        example: 
+    required:
+    - id
+    - amount
+    - status
+    - customer_email
+    - customer_phone
+    - created_at
+    - updated_at
+    - merchant_id
+    - reference_id
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  "/api/transactions":
+    post:
+      summary: create transaction
+      description: |
+        Authorize transaction - has amount and used to hold customer's amount.
+        Charge transaction - has amount and used to conﬁrm the amount is taken from the customer's account and transferred to the merchant. The merchant's total transactions amount has to be the sum of the approved Charge transactions.
+        Refund transaction - has amount and used to reverse a speciﬁc amount (whole amount) of the Charge Transaction and return it to the customer Transitions the Charge transaction to status refunded. The approved Refund transactions will decrease the merchant'stotal transaction amount.
+        Reversal transaction - has no amount, used to invalidate the Authorize Transaction. Transitions the Authorize transaction to status reversed
+      tags:
+      - transactions
+      security:
+      - basic_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: authorize transaction created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  transaction:
+                    "$ref": "#/components/transaction_out"
+                  errors:
+                    type: array
+                    items:
+                      type: string
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/transaction_in"
+servers:
+- url: http://{defaultHost}
+  variables:
+    defaultHost:
+      default: localhost:3000

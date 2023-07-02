@@ -8,11 +8,13 @@ module Api
     rescue_from CanCan::AccessDenied, with: :access_denied
 
     def create
+      # require 'pry'; binding.pry
       authorize! :create, Transaction
       use_case = CreateTransaction.perform(current_user, create_params)
-      render json: { transaction: use_case.transaction,
-                     errors: use_case.errors },
-             status: :created
+      render json: {
+        transaction: use_case.transaction,
+        errors: use_case.errors
+      }, status: status_code(use_case)
     end
 
     private
@@ -21,6 +23,13 @@ module Api
       params.require(:transaction)
             .permit(:amount, :customer_email, :customer_phone,
                     :type, :merchant_id, :reference_id)
+    end
+
+    def status_code(use_case)
+      return :bad_request unless use_case.transaction
+      return :bad_request if use_case.errors.present?
+
+      :created
     end
 
     def ensure_json_request
