@@ -17,7 +17,7 @@ module UseCase
 
   # inside of perform, add errors if the use case did not succeed
   def success?
-    !errors || errors.empty?
+    errors.blank?
   end
 
   def errors
@@ -25,20 +25,21 @@ module UseCase
     @errors
   end
 
-  def errors=(e)
-    @errors = e
+  def errors=(errors)
+    @errors = errors
   end
 
   def errors?
     !success?
   end
 
-  def save_error(e)
-    errors.push(e)
+  def save_error(error)
+    errors.push(error)
   end
 
-  def save_errors(e)
-    return if !e || e.empty?
-    self.errors += e
+  def save_errors(errors)
+    return if errors.blank?
+
+    self.errors += errors
   end
 end
