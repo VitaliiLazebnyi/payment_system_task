@@ -38,11 +38,7 @@ class CreateRefundTransaction
 
   def save_transaction
     transaction.valid?
-    # require 'pry'; binding.pry
-    if transaction.errors.present?
-      save_errors(transaction.errors.full_messages)
-      transaction.status = :error
-    end
+    save_errors(transaction.errors.full_messages)
     transaction.save(validate: false)
   end
 

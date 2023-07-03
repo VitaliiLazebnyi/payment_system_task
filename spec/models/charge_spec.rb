@@ -29,10 +29,6 @@ RSpec.describe Charge do
           merchant:)
   end
 
-  before do
-    allow(charge).to receive(:handle_errors).and_return(true)
-  end
-
   it_behaves_like 'it has reference'
 
   describe 'reference amount' do

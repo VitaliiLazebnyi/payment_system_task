@@ -5,12 +5,6 @@ RSpec.describe Authorize do
 
   let(:merchant) { build(:merchant) }
 
-  before do
-    allow(authorize).to receive(:handle_errors).and_return(true)
-  end
-
-  it { should validate_absence_of(:reference) }
-
   it {
     should validate_numericality_of(:amount)
       .only_integer

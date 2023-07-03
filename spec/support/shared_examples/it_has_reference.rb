@@ -9,9 +9,8 @@ RSpec.shared_examples 'it has reference' do
     end
 
     it "can't reference nonAuthorize transaction" do
-      subject.reference = reversal
-      should_not be_valid
-      expect(subject.errors.full_messages).to include('Reference can be only Authorize transaction')
+      expect { subject.reference = reversal }
+        .to raise_error(ActiveRecord::AssociationTypeMismatch)
     end
   end
 

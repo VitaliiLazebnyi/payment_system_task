@@ -2,9 +2,18 @@
 
 RSpec.describe Api::TransactionsController do
   describe 'POST #create' do
-    let(:merchant) { create(:merchant) }
-    let(:merchant2) { create(:merchant) }
-    let(:transaction_params) { attributes_for(:authorize, merchant_id: merchant.id) }
+    let!(:merchant) { create(:merchant) }
+    let!(:merchant2) { create(:merchant) }
+    let!(:authorize) { create(:authorize, amount: 100_000, merchant:) }
+    let(:transaction_params) do
+      attributes_for(
+        :charge,
+        merchant_id: merchant.id,
+        reference_id: authorize.id,
+        customer_email: authorize.customer_email,
+        customer_phone: authorize.customer_phone
+      )
+    end
 
     before do
       allow(controller).to receive(:current_user).and_return(merchant)
@@ -12,8 +21,9 @@ RSpec.describe Api::TransactionsController do
 
     describe 'valid parameters' do
       it 'creates a transaction' do
-        expect { post :create, params: { transaction: transaction_params }, format: :json }
-          .to change(Transaction, :count).by(1)
+        expect do
+          post :create, params: { transaction: transaction_params }, format: :json
+        end.to change(Transaction, :count).by(1)
       end
 
       it "updates Merchant's total_transaction_sum" do
@@ -25,7 +35,7 @@ RSpec.describe Api::TransactionsController do
 
       it 'returns 200 /ok/ response code' do
         post :create, params: { transaction: transaction_params }, format: :json
-        expect(response).to have_http_status(:ok)
+        expect(response).to have_http_status(:created)
       end
     end
 
@@ -36,9 +46,15 @@ RSpec.describe Api::TransactionsController do
                        customer_email: nil)
       end
 
-      it "doesn't create a transaction" do
+      it 'create a transaction' do
         expect { post :create, params: { transaction: transaction_params }, format: :json }
-          .not_to change(Transaction, :count)
+          .to change(Transaction, :count).by(1)
+      end
+
+      it 'created transaction status is error' do
+        post :create, params: { transaction: transaction_params }, format: :json
+        expect(Transaction.order('created_at').first.status).to eq 'approved'
+        expect(Transaction.order('created_at').last.status).to eq 'error'
       end
 
       it 'returns 400 /bad_request/ response code' do
@@ -63,7 +79,7 @@ RSpec.describe Api::TransactionsController do
 
       it 'returns 400 /bad_request/ response code' do
         post :create, params: { transaction: transaction_params }, format: :json
-        expect(response).to have_http_status(:unauthorized)
+        expect(response).to have_http_status(:bad_request)
       end
     end
 
@@ -87,9 +103,9 @@ RSpec.describe Api::TransactionsController do
           .not_to change(Transaction, :count)
       end
 
-      it 'returns 401 /unauthorized/ response code' do
+      it 'returns 400 /bad request/ response code' do
         post :create, params: { transaction: transaction_params }, format: :json
-        expect(response).to have_http_status(:unauthorized)
+        expect(response).to have_http_status(:bad_request)
       end
     end
 

@@ -28,10 +28,7 @@ class CreateAuthorizeTransaction
 
   def save_transaction
     transaction.valid?
-    if transaction.errors.present?
-      save_errors(transaction.errors.full_messages)
-      transaction.status = :error
-    end
+    save_errors(transaction.errors.full_messages)
     transaction.save(validate: false)
   end
 end
