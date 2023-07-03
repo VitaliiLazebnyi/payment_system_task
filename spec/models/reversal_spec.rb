@@ -20,10 +20,6 @@ RSpec.describe Reversal do
           merchant:)
   end
 
-  before do
-    allow(reversal).to receive(:handle_errors).and_return(true)
-  end
-
   it_behaves_like 'it has reference'
 
   it 'is a Transaction' do

@@ -49,8 +49,8 @@ RSpec.configure do |config|
             customer_phone: { type: :string, minLength: 3, example: '+38093123456789' },
             created_at: { type: :string, format: 'date-time', example: '2023-06-30T21:31:32.999Z' },
             updated_at: { type: :string, format: 'date-time', example: '2023-06-30T21:31:32.999Z' },
-            merchant_id: { type: :string, format: :uuid, example: '5578ec3a-c9d3-49e1-b91c-5d321ced56aa' },
-            reference_id: { type: :string, format: :uuid, example: nil }
+            merchant_id: { type: %i[string nil], format: :uuid, example: '5578ec3a-c9d3-49e1-b91c-5d321ced56aa' },
+            reference_id: { type: %i[string nil], format: :uuid, example: nil }
           },
           required: %w[id amount status customer_email customer_phone created_at updated_at merchant_id reference_id]
         }

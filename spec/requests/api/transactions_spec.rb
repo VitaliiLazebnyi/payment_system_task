@@ -3,6 +3,12 @@
 require 'swagger_helper'
 
 RSpec.describe 'api/transactions' do
+  let(:merchant) { create(:merchant) }
+  let(:authorize) { create(authorize, :merchant) }
+  let(:transaction) { attributes_for(:authorize, merchant_id: merchant.id) }
+  let(:params) { { transaction: } }
+  let(:Authorization) { "Basic #{Base64.strict_encode64("#{merchant.email}:#{merchant.password}")}" }
+
   path '/api/transactions' do
     post('create transaction') do
       description <<~DESCRIPTION
@@ -20,9 +26,7 @@ RSpec.describe 'api/transactions' do
                 in: :body,
                 schema: { '$ref' => '#/components/transaction_in' }
 
-      response '201', 'authorize transaction created', swagger_strict_schema_validation: true do
-        let(:transaction) { attributes_for(:authorize, merchant_id: merchant.id) }
-
+      response '201', 'Created', swagger_strict_schema_validation: true do
         run_test!
 
         schema(
@@ -40,10 +44,12 @@ RSpec.describe 'api/transactions' do
       end
 
       response 400, 'Bad request' do
+        let(:transaction) { attributes_for(:authorize) }
         run_test!
       end
 
       response 401, 'Unauthorized' do
+        let(:Authorization) { '' }
         run_test!
       end
     end

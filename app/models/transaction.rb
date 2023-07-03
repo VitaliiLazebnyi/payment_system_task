@@ -3,6 +3,8 @@
 class Transaction < ApplicationRecord
   CLASSES = %w[Authorize Charge Refund Reversal].freeze
 
+  after_validation :set_status
+
   enum status: { approved: 0, reversed: 1, refunded: 2, error: 3 }
 
   validates :customer_email, presence: true, length: { minimum: 3 }
@@ -12,7 +14,22 @@ class Transaction < ApplicationRecord
 
   belongs_to :merchant
 
+  belongs_to :reference,
+             class_name: 'Transaction',
+             optional: true,
+             validate: false
+
+  has_one :follow,
+          class_name: 'Transaction',
+          foreign_key: :reference_id,
+          inverse_of: :reference,
+          dependent: :nullify
+
   private
+
+  def set_status
+    self.status = :error if errors.present?
+  end
 
   def log_validation_errors(errors)
     validation_errors ||= ''
