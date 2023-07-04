@@ -31,12 +31,6 @@ class Transaction < ApplicationRecord
     self.status = :error if errors.present?
   end
 
-  def log_validation_errors(errors)
-    validation_errors ||= ''
-    divider = validation_errors.empty? ? '' : "\n"
-    validation_errors << (divider + errors)
-  end
-
   def active_merchant
     return if merchant&.active
 

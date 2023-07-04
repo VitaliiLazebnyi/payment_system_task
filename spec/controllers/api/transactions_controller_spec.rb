@@ -16,7 +16,9 @@ RSpec.describe Api::TransactionsController do
     end
 
     before do
-      allow(controller).to receive(:current_user).and_return(merchant)
+      request.env['HTTP_AUTHORIZATION'] =
+        ActionController::HttpAuthentication::Basic
+        .encode_credentials(merchant.email, merchant.password)
     end
 
     describe 'valid parameters' do
@@ -64,9 +66,9 @@ RSpec.describe Api::TransactionsController do
     end
 
     describe "merchant_id's in parameters and session are different" do
-      before do
-        allow(controller).to receive(:current_user).and_return(merchant)
-      end
+      # before do
+      #   allow(controller).to receive(:current_user).and_return(merchant)
+      # end
 
       let(:transaction_params) do
         attributes_for(:authorize, merchant_id: merchant2.id)
@@ -109,9 +111,9 @@ RSpec.describe Api::TransactionsController do
       end
     end
 
-    describe "doesn't pass basic auth" do
+    describe 'no basic auth' do
       before do
-        allow(controller).to receive(:current_user).and_return(nil)
+        request.env['HTTP_AUTHORIZATION'] = nil
       end
 
       it "doesn't create a transaction" do
@@ -119,9 +121,76 @@ RSpec.describe Api::TransactionsController do
           .not_to change(Transaction, :count)
       end
 
-      it 'redirect to login page' do
+      it 'returns :unauthorized' do
         post :create, params: { transaction: transaction_params }, format: :json
-        expect(response).to redirect_to(login_path)
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    describe 'basic auth with invalid email' do
+      before do
+        request.env['HTTP_AUTHORIZATION'] =
+          ActionController::HttpAuthentication::Basic
+          .encode_credentials('invalid_email', merchant.password)
+      end
+
+      it "doesn't create a transaction" do
+        expect { post :create, params: { transaction: transaction_params }, format: :json }
+          .not_to change(Transaction, :count)
+      end
+
+      it 'returns :unauthorized' do
+        post :create, params: { transaction: transaction_params }, format: :json
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    describe 'basic auth with invalid password' do
+      before do
+        request.env['HTTP_AUTHORIZATION'] =
+          ActionController::HttpAuthentication::Basic
+          .encode_credentials(merchant.email, 'invalid_password')
+      end
+
+      it "doesn't create a transaction" do
+        expect { post :create, params: { transaction: transaction_params }, format: :json }
+          .not_to change(Transaction, :count)
+      end
+
+      it 'returns :unauthorized' do
+        post :create, params: { transaction: transaction_params }, format: :json
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    describe 'admin tries to create transaction' do
+      let!(:admin) { create(:admin) }
+
+      before do
+        request.env['HTTP_AUTHORIZATION'] =
+          ActionController::HttpAuthentication::Basic
+          .encode_credentials(admin.email, admin.password)
+      end
+
+      it "doesn't create a transaction" do
+        expect { post :create, params: { transaction: transaction_params }, format: :json }
+          .not_to change(Transaction, :count)
+      end
+
+      it 'returns :unauthorized' do
+        post :create, params: { transaction: transaction_params }, format: :json
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    describe 'no permissions to create transaction' do
+      before do
+        allow(CreateTransaction).to receive(:perform).and_raise(CanCan::AccessDenied)
+      end
+
+      it 'returns :unauthorized' do
+        post :create, params: { transaction: transaction_params }, format: :json
+        expect(response).to have_http_status(:forbidden)
       end
     end
   end
