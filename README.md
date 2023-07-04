@@ -7,53 +7,53 @@
 2. Clone repository
 3. Execute ``bundle install`` to install required gems
 4. Create postgresql user **payment_system_task** with password **payment_system_task** (for development and testing) or override Env variables for production:
-   ````
-   host: <%= ENV['PAYMENT_SYSTEM_TASK_DATABASE_HOST']     || 'localhost' %>
-   port: <%= ENV['PAYMENT_SYSTEM_TASK_DATABASE_PORT']     || '5432' %>
-   username: <%= ENV['PAYMENT_SYSTEM_TASK_DATABASE_USERNAME'] || 'payment_system_task' %>
-   password: <%= ENV['PAYMENT_SYSTEM_TASK_DATABASE_PASSWORD'] || 'payment_system_task' %>
-   ````
+    ```
+    host: <%= ENV['PAYMENT_SYSTEM_TASK_DATABASE_HOST']     || 'localhost' %>
+    port: <%= ENV['PAYMENT_SYSTEM_TASK_DATABASE_PORT']     || '5432' %>
+    username: <%= ENV['PAYMENT_SYSTEM_TASK_DATABASE_USERNAME'] || 'payment_system_task' %>
+    password: <%= ENV['PAYMENT_SYSTEM_TASK_DATABASE_PASSWORD'] || 'payment_system_task' %>
+    ```
 5. Create, migrate, seed databases:
-   ````
-   rails db:create db:migrate db:seed
-   ````
+    ```
+    rails db:create db:migrate db:seed
+    ```
 
 ### Run application
-````
+```
 rails s
-````
+```
 
 ### Run Jobs
 For development:
-````
+```
 whenever --update-crontab --set environment='development'
-````
+```
 
 For production:
-````
+```
 whenever(--update - crontab)
-````
+```
 
 Jobs log can be found at ``log/cron.log``.
 
 ### Execute tasks
 
 import users
-````
+```
 rake import:users filename=<filename>.xml
-````
+```
 
 Example of users xml file can be found at ``spec/fixtures/users.xml``
 
 ### Execute tests
-````
+```
 rspec
-````
+```
 
 ### Execute linters
-````
+```
 rubocop
-````
+```
 
 ## Docker Application Usage
 
@@ -80,40 +80,41 @@ docker system prune
 
 Create Transactions
 
-   POST   **/api/transactions**
+POST **/api/transactions**
 
-   **Request example:**
-   ```json
-   {
-      "transaction":{
-         "amount":100,
-         "status":"approved",
-         "customer_email":"my@secret.email",
-         "customer_phone":"myPhone",
-         "type":"Authorize",
-         "user_id":"c264b98c-4735-4287-8a85-9748aa7d3caf"
-      }
-   }
-   ```
+**Request example:**
 
-   You are expected to fill following request headers:
-   ```
-   Accept:"application/json"
-   Content-Type:"application/json"
-   ```
+```json
+{
+  "transaction":{
+    "amount":100,
+    "status":"approved",
+    "customer_email":"my@secret.email",
+    "customer_phone":"myPhone",
+    "type":"Authorize",
+    "user_id":"c264b98c-4735-4287-8a85-9748aa7d3caf"
+  }
+}
+```
+
+You are expected to fill following request headers:
+```
+Accept:"application/json"
+Content-Type:"application/json"
+```
 
    To pass **Basic Auth** use existing Merchant **email** as username and his **password** like a password.
    **user_id** of Merchant in Basic Auth and **id** from Basic Auth should be the same.
 
 To reset passwords for existing users:
 1. Run Rails console
-   ```
-rails c
-   ```
+    ```
+    rails c
+    ```
 2. Execute:
-   ```
-User.all.each do |u|
-  u.password = '<new password>'
-  u.save!
-end
-   ```
+    ```
+    User.all.each do |u|
+      u.password = '<new password>'
+      u.save!
+    end
+    ```
