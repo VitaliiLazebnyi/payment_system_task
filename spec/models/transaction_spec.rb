@@ -7,23 +7,6 @@ RSpec.describe Transaction do
 
   it { should belong_to(:merchant) }
 
-  # it {
-  #   should have_one(:reference)
-  #     .class_name(described_class)
-  #     .with_foreign_key('reference_id')
-  #     .inverse_of(:follow)
-  #     .dependent(:nullify)
-  # }
-  #
-  # it {
-  #   should belong_to(:follow)
-  #     .class_name(described_class)
-  #     .with_foreign_key('reference_id')
-  #     .inverse_of(:reference)
-  #     .dependent(:destroy)
-  #     .optional
-  # }
-
   it {
     should define_enum_for(:status)
       .with_values(%i[approved reversed refunded error])

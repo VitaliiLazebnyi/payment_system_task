@@ -8,7 +8,6 @@ module Api
     rescue_from CanCan::AccessDenied, with: :access_denied
 
     def create
-      # require 'pry'; binding.pry
       authorize! :create, Transaction
       use_case = CreateTransaction.perform(current_user, create_params)
       render json: {

@@ -22,7 +22,6 @@ class Refund < Transaction
   def reference_merchant
     return if reference&.merchant == merchant
 
-    # require 'pry'; binding.pry
     errors.add(:reference, 'reference Merchant should be the same as Merchant')
   end
 

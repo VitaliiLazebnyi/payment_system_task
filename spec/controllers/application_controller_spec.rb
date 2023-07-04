@@ -15,7 +15,7 @@ RSpec.describe ApplicationController do
         expect(controller.current_user).to eq merchant
       end
 
-      it 'fills and @current_user if absent' do
+      it 'fills @current_user if absent' do
         controller.instance_variable_set(:@current_user, nil)
         expect(User).to receive(:find).with(merchant.id).and_return(merchant).once
         expect(controller.current_user).to eq merchant
@@ -30,6 +30,19 @@ RSpec.describe ApplicationController do
       it 'fills and @current_user if absent' do
         expect(User).not_to receive(:find)
         expect(controller.current_user).to be_nil
+      end
+    end
+
+    context 'when session[:user_id] is outdated' do
+      before do
+        session[:user_id] = merchant.id
+        allow(User).to receive(:find).and_raise(ActiveRecord::RecordNotFound)
+      end
+
+      it 'removes @current_user if invalid' do
+        expect(controller.current_user).to be_nil
+        expect(controller.instance_variable_get(:@current_user)).to be_nil
+        expect(session[:user_id]).to be_nil
       end
     end
   end

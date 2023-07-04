@@ -51,7 +51,7 @@ class CreateRefundTransaction
   end
 
   def invalidate_charge_transaction
-    return false if errors
+    return false if errors.present?
 
     @charge.update!(status: :refunded)
   end

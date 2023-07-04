@@ -46,6 +46,10 @@ RSpec/DescribeClass:
     - spec/tasks/*_spec.rb
     - spec/requests/api/*_spec.rb
 
+RSpec/VariableName:
+  Exclude:
+    - spec/requests/api/*_spec.rb
+
 RSpec/EmptyExampleGroup:
   Exclude:
     - spec/requests/api/*_spec.rb

@@ -11,7 +11,6 @@ class ApplicationController < ActionController::Base
     @current_user ||= User.find(session[:user_id]) if session[:user_id]
   rescue ActiveRecord::RecordNotFound
     session[:user_id] = nil
-    @current_user = nil
   end
 
   private
@@ -20,13 +19,6 @@ class ApplicationController < ActionController::Base
     respond_to do |format|
       format.json { head :forbidden }
       format.html { render file: Rails.public_path.join('403.html').to_s, layout: false, status: :forbidden }
-    end
-  end
-
-  def argument_error(exception)
-    respond_to do |format|
-      format.json { render json: { error: exception.message }, status: :bad_request }
-      format.html { render file: Rails.public_path.join('400.html').to_s, layout: false, status: :bad_request }
     end
   end
 
